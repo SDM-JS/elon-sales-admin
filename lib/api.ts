@@ -9,6 +9,7 @@ export const api = axios.create({
   },
 })
 
+<<<<<<< HEAD
 // Add an interceptor to handle FormData automatically
 api.interceptors.request.use((config) => {
   if (config.data instanceof FormData) {
@@ -19,6 +20,8 @@ api.interceptors.request.use((config) => {
 })
 
 // Categories Endpoints
+=======
+>>>>>>> 53ad42895795d9807364629ba0599767f742cb70
 export const getCategories = async () => {
   const response = await api.get("/categories")
   return response.data
@@ -106,5 +109,26 @@ export const updateSale = async (saleId: string, formData: FormData) => {
 
 export const deleteSale = async (saleId: string) => {
   const response = await api.delete(`/sales/${saleId}`, { data: { id: saleId } })
+  return response.data
+}
+
+// Carusel Endpoints
+export const getCarusels = async () => {
+  const response = await api.get("/carusel")
+  return response.data
+}
+
+export const createCarusel = async (carusels: { image: string; saleId: string }[]) => {
+  const response = await api.post("/carusel", { carusels })
+  return response.data
+}
+
+export const updateCarusel = async (id: string, data: { image?: string; saleId?: string }) => {
+  const response = await api.put(`/carusel/${id}`, data)
+  return response.data
+}
+
+export const deleteCarusel = async (id: string) => {
+  const response = await api.delete(`/carusel/${id}`)
   return response.data
 }
