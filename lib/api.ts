@@ -9,6 +9,15 @@ export const api = axios.create({
   },
 })
 
+// Add an interceptor to handle FormData automatically
+api.interceptors.request.use((config) => {
+  if (config.data instanceof FormData) {
+    // When sending FormData, let the browser/Axios set the Content-Type with the boundary
+    delete config.headers["Content-Type"]
+  }
+  return config
+})
+
 // Categories Endpoints
 export const getCategories = async () => {
   const response = await api.get("/categories")
@@ -37,12 +46,16 @@ export const getUsers = async () => {
 }
 
 export const createUser = async (data: any) => {
-  const response = await api.post("/users", data)
+  // User model doesn't have password field
+  const { password, ...safeData } = data
+  const response = await api.post("/users", safeData)
   return response.data
 }
 
 export const updateUser = async (id: string, data: any) => {
-  const response = await api.put(`/users/${id}`, { id, ...data })
+  const { password, ...safeData } = data
+  // Using both URL param and body for maximum backend compatibility
+  const response = await api.put(`/users/${id}`, { id, ...safeData })
   return response.data
 }
 
@@ -57,13 +70,16 @@ export const getSellers = async () => {
   return response.data
 }
 
-export const createSeller = async (data: any) => {
-  const response = await api.post("/seller", data)
+export const createSeller = async (formData: FormData) => {
+  const response = await api.post("/seller", formData)
   return response.data
 }
 
-export const updateSeller = async (id: string, data: any) => {
-  const response = await api.put(`/seller/${id}`, { id, ...data })
+export const updateSeller = async (id: string, formData: FormData) => {
+  if (formData instanceof FormData && !formData.has("id")) {
+    formData.append("id", id)
+  }
+  const response = await api.put(`/seller/${id}`, formData)
   return response.data
 }
 
@@ -79,24 +95,16 @@ export const getSales = async () => {
 }
 
 export const createSale = async (sellerId: string, formData: FormData) => {
-  const response = await api.post(`/sales/${sellerId}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  })
+  const response = await api.post(`/sales/${sellerId}`, formData)
   return response.data
 }
 
 export const updateSale = async (saleId: string, formData: FormData) => {
-  const response = await api.put(`/sales/put/${saleId}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  })
+  const response = await api.put(`/sales/put/${saleId}`, formData)
   return response.data
 }
 
 export const deleteSale = async (saleId: string) => {
-  const response = await api.delete(`/sales/${saleId}`)
+  const response = await api.delete(`/sales/${saleId}`, { data: { id: saleId } })
   return response.data
 }
