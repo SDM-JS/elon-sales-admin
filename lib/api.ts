@@ -1,6 +1,7 @@
 import axios from "axios"
 
-const API_BASE_URL = "https://saledos-vkwu.onrender.com/api"
+// const API_BASE_URL = "https://saledos-vkwu.onrender.com/api"
+const API_BASE_URL = "http://192.168.123.46:3000/api"
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -63,7 +64,11 @@ export const createSeller = async (data: any) => {
 }
 
 export const updateSeller = async (id: string, data: any) => {
-  const response = await api.put(`/seller/${id}`, { id, ...data })
+  const response = await api.put(`/seller/${id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
   return response.data
 }
 

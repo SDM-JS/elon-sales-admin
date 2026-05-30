@@ -94,7 +94,7 @@ export default function SellersPage() {
   // Handle Edit Submit (with logo File)
   const onEditSubmit = async (values: any, logoFile: File | null) => {
     if (!selectedSeller) return
-    
+
     const formData = new FormData()
     formData.append("brandName", values.brandName)
     formData.append("founder", values.founder)
@@ -167,7 +167,7 @@ export default function SellersPage() {
             Платформадаги мавжуд сотувчилар ва дўконларни назорат қилиш ва қўшиш.
           </p>
         </div>
-        
+
         <Button
           onClick={() => setIsCreateOpen(true)}
           className="uppercase tracking-wider cursor-pointer rounded-xl px-4 py-2.5 shadow-md shadow-indigo-150"
@@ -181,9 +181,9 @@ export default function SellersPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center justify-between border border-slate-100 bg-white p-4 rounded-2xl shadow-sm shadow-slate-100/30">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input 
-            type="text" 
-            placeholder="Сотувчиларни бренд номи ёки таъсисчиси бўйича излаш..." 
+          <Input
+            type="text"
+            placeholder="Сотувчиларни бренд номи ёки таъсисчиси бўйича излаш..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 rounded-xl border-slate-200"
@@ -208,10 +208,10 @@ export default function SellersPage() {
           </p>
         </div>
       ) : (
-        <SellersTable 
-          sellers={filteredSellers} 
-          onEdit={(s) => { setSelectedSeller(s); setIsEditOpen(true) }} 
-          onDelete={(s) => { setSelectedSeller(s); setIsDeleteOpen(true) }} 
+        <SellersTable
+          sellers={filteredSellers}
+          onEdit={(s) => { setSelectedSeller(s); setIsEditOpen(true) }}
+          onDelete={(s) => { setSelectedSeller(s); setIsDeleteOpen(true) }}
         />
       )}
 
