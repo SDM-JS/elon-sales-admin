@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_BASE_URL = "https://saledos-vkwu.onrender.com/api"
+const API_BASE_URL = "https://saledos-1.onrender.com/api"
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,7 +9,6 @@ export const api = axios.create({
   },
 })
 
-// Categories Endpoints
 export const getCategories = async () => {
   const response = await api.get("/categories")
   return response.data
@@ -98,5 +97,26 @@ export const updateSale = async (saleId: string, formData: FormData) => {
 
 export const deleteSale = async (saleId: string) => {
   const response = await api.delete(`/sales/${saleId}`)
+  return response.data
+}
+
+// Carusel Endpoints
+export const getCarusels = async () => {
+  const response = await api.get("/carusel")
+  return response.data
+}
+
+export const createCarusel = async (carusels: { image: string; saleId: string }[]) => {
+  const response = await api.post("/carusel", { carusels })
+  return response.data
+}
+
+export const updateCarusel = async (id: string, data: { image?: string; saleId?: string }) => {
+  const response = await api.put(`/carusel/${id}`, data)
+  return response.data
+}
+
+export const deleteCarusel = async (id: string) => {
+  const response = await api.delete(`/carusel/${id}`)
   return response.data
 }
