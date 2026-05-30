@@ -9,7 +9,7 @@ export const api = axios.create({
   },
 })
 
-<<<<<<< HEAD
+
 // Add an interceptor to handle FormData automatically
 api.interceptors.request.use((config) => {
   if (config.data instanceof FormData) {
@@ -20,8 +20,8 @@ api.interceptors.request.use((config) => {
 })
 
 // Categories Endpoints
-=======
->>>>>>> 53ad42895795d9807364629ba0599767f742cb70
+
+
 export const getCategories = async () => {
   const response = await api.get("/categories")
   return response.data
@@ -38,7 +38,8 @@ export const updateCategory = async (id: string, name: string) => {
 }
 
 export const deleteCategory = async (id: string) => {
-  const response = await api.delete("/categories", { data: { id } })
+  console.log(id)
+  const response = await api.delete("/categories",  {data:{ id:id }} )
   return response.data
 }
 
