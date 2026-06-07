@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { Loader2, MapPin, Image as ImageIcon } from "lucide-react"
+import { Loader2, MapPin, Image as ImageIcon, MessageSquare } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MapPicker } from "@/components/map-picker"
 
-// Zod schemas
+// 1. Zod sxemalariga whatsappNumber yaratish va tahrirlash uchun qo'shildi
 const createSchema = z.object({
   founder: z.string().min(1, "Таъсисчи исми киритилиши шарт!"),
   brandName: z.string().min(1, "Бренд номи киритилиши шарт!"),
@@ -26,6 +26,7 @@ const createSchema = z.object({
   desc: z.string().min(1, "Тижорат тавсифи киритилиши шарт!"),
   password: z.string().min(6, "Махфий сўз камида 6 белгидан иборат бўлиши лозим!"),
   email: z.string().email("Нотўғри электрон почта манзили!"),
+  whatsappNumber: z.string().optional(), 
   latitude: z.string().optional(),
   longitude: z.string().optional(),
 })
@@ -35,10 +36,10 @@ const editSchema = z.object({
   brandName: z.string().min(1, "Бренд номи киритилиши шарт!"),
   phoneNumber: z.string().min(5, "Телефон рақами киритилиши шарт!"),
   desc: z.string().min(1, "Тижорат тавсифи киритилиши шарт!"),
-  password: z.string().refine((val) => val.length === 0 || val.length >= 6, {
-    message: "Махфий сўз камида 6 белгидан иборат бўлиши лозим!"
-  }),
+  // PAROL REFINEMENT QISMI TO'G'IRLANDI:
+  password: z.string().optional().or(z.string().min(6, "Махфий сўз камида 6 белгидан иборат бўлиши лозим!")).or(z.literal("")),
   email: z.string().email("Нотўғри электрон почта манзили!"),
+  whatsappNumber: z.string().optional(),
   latitude: z.string().optional(),
   longitude: z.string().optional(),
 })
@@ -54,6 +55,7 @@ interface Seller {
   logo?: string | null
   desc: string
   email: string
+  whatsappNumber?: string | null // <-- INTERFACE YANGILANDI
   latitude?: string | null
   longitude?: string | null
 }
@@ -89,14 +91,35 @@ export function SellerDialogs({
 
   const createForm = useForm<CreateValues>({
     resolver: zodResolver(createSchema),
-    defaultValues: { founder: "", brandName: "", phoneNumber: "", desc: "", password: "", email: "", latitude: "", longitude: "" }
+    defaultValues: { 
+      founder: "", 
+      brandName: "", 
+      phoneNumber: "", 
+      desc: "", 
+      password: "", 
+      email: "", 
+      whatsappNumber: "", 
+      latitude: "", 
+      longitude: "" 
+    }
   })
 
   const editForm = useForm<EditValues>({
     resolver: zodResolver(editSchema),
-    defaultValues: { founder: "", brandName: "", phoneNumber: "", desc: "", password: "", email: "", latitude: "", longitude: "" }
+    defaultValues: { 
+      founder: "", 
+      brandName: "", 
+      phoneNumber: "", 
+      desc: "", 
+      password: "", 
+      email: "", 
+      whatsappNumber: "", // <-- TAYYORLANDI
+      latitude: "", 
+      longitude: "" 
+    }
   })
 
+  // Sotuvchi tahrirlashga tanlanganda ma'lumotlarni formaga yuklash
   useEffect(() => {
     if (selectedSeller) {
       editForm.setValue("founder", selectedSeller.founder)
@@ -105,6 +128,7 @@ export function SellerDialogs({
       editForm.setValue("desc", selectedSeller.desc)
       editForm.setValue("password", "")
       editForm.setValue("email", selectedSeller.email)
+      editForm.setValue("whatsappNumber", selectedSeller.whatsappNumber || "") // <-- YUKLANADI
       editForm.setValue("latitude", selectedSeller.latitude || "")
       editForm.setValue("longitude", selectedSeller.longitude || "")
       setLogoFile(null)
@@ -121,25 +145,76 @@ export function SellerDialogs({
           </DialogHeader>
           <form onSubmit={createForm.handleSubmit(v => onCreateSubmit(v, logoFile))} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Бренд</label>
-                <Input {...createForm.register("brandName")} className="rounded-xl border-slate-200" /></div>
-              <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Таъсисчи</label>
-                <Input {...createForm.register("founder")} className="rounded-xl border-slate-200" /></div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400">Бренд</label>
+                <Input {...createForm.register("brandName")} className="rounded-xl border-slate-200" />
+                {createForm.formState.errors.brandName && (
+                  <span className="text-[10px] text-red-500 font-medium">{createForm.formState.errors.brandName.message}</span>
+                )}
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400">Таъсисчи</label>
+                <Input {...createForm.register("founder")} className="rounded-xl border-slate-200" />
+                {createForm.formState.errors.founder && (
+                  <span className="text-[10px] text-red-500 font-medium">{createForm.formState.errors.founder.message}</span>
+                )}
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Телефон</label>
-                <Input {...createForm.register("phoneNumber")} className="rounded-xl border-slate-200" /></div>
-              <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Почта</label>
-                <Input {...createForm.register("email")} className="rounded-xl border-slate-200" /></div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400">Телефон</label>
+                <Input {...createForm.register("phoneNumber")} className="rounded-xl border-slate-200" />
+                {createForm.formState.errors.phoneNumber && (
+                  <span className="text-[10px] text-red-500 font-medium">{createForm.formState.errors.phoneNumber.message}</span>
+                )}
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400">Почта</label>
+                <Input {...createForm.register("email")} className="rounded-xl border-slate-200" />
+                {createForm.formState.errors.email && (
+                  <span className="text-[10px] text-red-500 font-medium">{createForm.formState.errors.email.message}</span>
+                )}
+              </div>
             </div>
+
+            {/* CREATE MODALDAGI WHATSAPP INPUTI */}
+            <div className="p-3 bg-indigo-50/60 border border-indigo-100 rounded-xl flex flex-col gap-1">
+              <label className="text-[10px] font-bold uppercase text-indigo-900 flex items-center gap-1">
+                <MessageSquare className="h-3.5 w-3.5 text-emerald-500" /> WhatsApp Рақами (Ихтиёрий)
+              </label>
+              <Input 
+                {...createForm.register("whatsappNumber")} 
+                placeholder="Masalan: 998901234567"
+                className="rounded-xl border-indigo-200 bg-white focus-visible:ring-indigo-500" 
+              />
+              <span className="text-[9px] text-slate-400 uppercase tracking-wide">
+                * Сотувчи яратилгач, ушбу рақамга махфий сўз автоматик равишда сервер орқали жўнатилади.
+              </span>
+            </div>
+
             <div className="grid grid-cols-2 gap-4 items-end">
-              <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1"><ImageIcon className="h-3.5 w-3.5"/>Логотип расми</label>
-                <input type="file" accept="image/*" onChange={e => setLogoFile(e.target.files?.[0] || null)} className="border border-slate-200 p-1 text-xs rounded-xl" /></div>
-              <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Махфий сўз</label>
-                <Input type="password" {...createForm.register("password")} className="rounded-xl border-slate-200" /></div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
+                  <ImageIcon className="h-3.5 w-3.5"/>Логотип расми
+                </label>
+                <input type="file" accept="image/*" onChange={e => setLogoFile(e.target.files?.[0] || null)} className="border border-slate-200 p-1 text-xs rounded-xl bg-white" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400">Махфий сўз</label>
+                <Input type="password" {...createForm.register("password")} className="rounded-xl border-slate-200" />
+                {createForm.formState.errors.password && (
+                  <span className="text-[10px] text-red-500 font-medium">{createForm.formState.errors.password.message}</span>
+                )}
+              </div>
             </div>
-            <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Тижорат тавсифи</label>
-              <textarea {...createForm.register("desc")} rows={2} className="w-full border border-slate-200 px-3 py-2 text-xs rounded-xl" /></div>
+            
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-bold uppercase text-slate-400">Тижорат тавсифи</label>
+              <textarea {...createForm.register("desc")} rows={2} className="w-full border border-slate-200 px-3 py-2 text-xs rounded-xl" />
+              {createForm.formState.errors.desc && (
+                <span className="text-[10px] text-red-500 font-medium">{createForm.formState.errors.desc.message}</span>
+              )}
+            </div>
             
             <MapPicker 
               latitude={createForm.watch("latitude") || ""} 
@@ -149,7 +224,9 @@ export function SellerDialogs({
 
             <DialogFooter className="border-t pt-4 flex gap-2 justify-end">
               <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)} className="rounded-xl">Бекор қилиш</Button>
-              <Button type="submit" disabled={submitting} className="rounded-xl">{submitting && <Loader2 className="h-3 w-3 animate-spin mr-1"/>}Сақлаш</Button>
+              <Button type="submit" disabled={submitting} className="rounded-xl">
+                {submitting && <Loader2 className="h-3 w-3 animate-spin mr-1"/>}Сақлаш
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -174,11 +251,24 @@ export function SellerDialogs({
               <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Почта</label>
                 <Input {...editForm.register("email")} className="rounded-xl border-slate-200" /></div>
             </div>
+
+            {/* EDIT (TAHRIRLASH) MODALIGA HAM WHATSAPP INPUTI INTEGRATSIYA QILINDI */}
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-1">
+              <label className="text-[10px] font-bold uppercase text-slate-700 flex items-center gap-1">
+                <MessageSquare className="h-3.5 w-3.5 text-slate-500" /> WhatsApp Рақами
+              </label>
+              <Input 
+                {...editForm.register("whatsappNumber")} 
+                placeholder="Masalan: 998901234567"
+                className="rounded-xl border-slate-200 bg-white" 
+              />
+            </div>
+
             <div className="grid grid-cols-2 gap-4 items-end">
               <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1"><ImageIcon className="h-3.5 w-3.5"/>Янги логотип</label>
-                <input type="file" accept="image/*" onChange={e => setLogoFile(e.target.files?.[0] || null)} className="border border-slate-200 p-1 text-xs rounded-xl" /></div>
+                <input type="file" accept="image/*" onChange={e => setLogoFile(e.target.files?.[0] || null)} className="border border-slate-200 p-1 text-xs rounded-xl bg-white" /></div>
               <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Махфий сўз</label>
-                <Input type="password" {...editForm.register("password")} className="rounded-xl border-slate-200" /></div>
+                <Input type="password" {...editForm.register("password")} className="rounded-xl border-slate-200" placeholder="Ўзгаришсиз қолдириш" /></div>
             </div>
             <div className="flex flex-col gap-1"><label className="text-[10px] font-bold uppercase text-slate-400">Тижорат тавсифи</label>
               <textarea {...editForm.register("desc")} rows={2} className="w-full border border-slate-200 px-3 py-2 text-xs rounded-xl" /></div>
@@ -197,7 +287,6 @@ export function SellerDialogs({
         </DialogContent>
       </Dialog>
 
-      {/* DELETE DIALOG */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader><DialogTitle className="text-base font-bold text-rose-600 uppercase">Сотувчини ўчириш</DialogTitle></DialogHeader>
