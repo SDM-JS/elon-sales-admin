@@ -103,6 +103,7 @@ export default function SellersPage() {
   // Handle Edit Submit
   const onEditSubmit = async (values: any, logoFile: File | null) => {
     if (!selectedSeller) return
+
     const formData = new FormData()
     formData.append("brandName", values.brandName)
     formData.append("founder", values.founder)
@@ -186,10 +187,10 @@ export default function SellersPage() {
           <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Маълумотлар юкланмоқда...</p>
         </div>
       ) : (
-        <SellersTable 
-          sellers={filteredSellers} 
-          onEdit={(s) => { setSelectedSeller(s); setIsEditOpen(true) }} 
-          onDelete={(s) => { setSelectedSeller(s); setIsDeleteOpen(true) }} 
+        <SellersTable
+          sellers={filteredSellers}
+          onEdit={(s) => { setSelectedSeller(s); setIsEditOpen(true) }}
+          onDelete={(s) => { setSelectedSeller(s); setIsDeleteOpen(true) }}
         />
       )}
 

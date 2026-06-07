@@ -97,10 +97,14 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
               </TableCell>
               <TableCell className="px-6 py-4 text-xs text-slate-500">
                 {seller.latitude && seller.longitude ? (
-                  <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg w-fit font-mono text-[10px] text-slate-600">
-                    <MapPin className="h-3.5 w-3.5 text-indigo-500" />
+                  <Link
+                    href={`/sellers/map?lat=${seller.latitude}&lng=${seller.longitude}&name=${encodeURIComponent(seller.brandName)}`}
+                    className="flex items-center gap-1 bg-indigo-50 border border-indigo-100 px-2 py-1 rounded-lg w-fit font-mono text-[10px] text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition-all cursor-pointer group"
+                    title="Харитада кўриш"
+                  >
+                    <MapPin className="h-3.5 w-3.5 text-indigo-500 group-hover:text-indigo-700 transition-colors" />
                     <span>{seller.latitude}, {seller.longitude}</span>
-                  </div>
+                  </Link>
                 ) : (
                   <span className="text-slate-300 font-bold">—</span>
                 )}
