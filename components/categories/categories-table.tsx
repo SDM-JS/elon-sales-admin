@@ -14,11 +14,8 @@ import {
 } from "@/components/ui/table"
 
 
-interface Category {
-  id: string
-  name: string
-  createdAt: string
-}
+import { Category } from "./types"
+
 
 interface CategoriesTableProps {
   categories: Category[]

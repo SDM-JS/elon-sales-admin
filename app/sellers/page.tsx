@@ -14,19 +14,8 @@ import {
 } from "@/lib/api"
 import { SellersTable } from "@/components/sellers/sellers-table"
 import { SellerDialogs } from "@/components/sellers/seller-dialogs"
+import { Seller } from "@/components/sellers/types"
 
-interface Seller {
-  id: string
-  founder: string
-  brandName: string
-  phoneNumber: string
-  logo?: string | null
-  desc: string
-  email: string
-  latitude?: string | null
-  longitude?: string | null
-  createdAt: string
-}
 
 export default function SellersPage() {
   const [sellers, setSellers] = useState<Seller[]>([])

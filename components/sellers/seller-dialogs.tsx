@@ -46,19 +46,8 @@ const editSchema = z.object({
 
 type CreateValues = z.infer<typeof createSchema>
 type EditValues = z.infer<typeof editSchema>
+import { Seller } from "./types"
 
-interface Seller {
-  id: string
-  founder: string
-  brandName: string
-  phoneNumber: string
-  logo?: string | null
-  desc: string
-  email: string
-  whatsappNumber?: string | null // <-- INTERFACE YANGILANDI
-  latitude?: string | null
-  longitude?: string | null
-}
 
 interface SellerDialogsProps {
   isCreateOpen: boolean

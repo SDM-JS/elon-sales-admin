@@ -47,27 +47,8 @@ const salesSchema = z
 
 type SalesFormValues = z.infer<typeof salesSchema>;
 
-interface Sale {
-  id: string;
-  productName: string;
-  images: string[];
-  lastPrice: number;
-  salePrice: number;
-  expires: string;
-  sellerId: string;
-  categoryId: string;
-  desc?: string | null;
-  seller?: { brandName: string };
-}
+import { Sale, Seller, Category } from "./types"
 
-interface Seller {
-  id: string;
-  brandName: string;
-}
-interface Category {
-  id: string;
-  name: string;
-}
 
 interface SalesDialogsProps {
   isCreateOpen: boolean;

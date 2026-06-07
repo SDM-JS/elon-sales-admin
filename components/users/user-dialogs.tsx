@@ -35,12 +35,8 @@ const editUserSchema = z.object({
 type CreateUserValues = z.infer<typeof createUserSchema>
 type EditUserValues = z.infer<typeof editUserSchema>
 
-interface User {
-  id: string
-  fullName: string
-  phoneNumber: string
-  password?: string
-}
+import { User } from "./types"
+
 
 interface UserDialogsProps {
   isCreateOpen: boolean
