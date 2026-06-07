@@ -18,21 +18,8 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
+import { Sale } from "./types"
 
-interface Sale {
-  id: string
-  productName: string
-  images: string[]
-  lastPrice: number
-  salePrice: number
-  percentageDiscount: number
-  desc?: string | null
-  expires: string
-  sellerId: string
-  categoryId: string
-  seller?: { brandName: string }
-  categories?: { name: string }
-}
 
 interface CarouselItem {
   id: string

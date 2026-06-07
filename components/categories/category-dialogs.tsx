@@ -23,10 +23,8 @@ const categorySchema = z.object({
 
 type CategoryFormValues = z.infer<typeof categorySchema>
 
-interface Category {
-  id: string
-  name: string
-}
+import { Category } from "./types"
+
 
 interface CategoryDialogsProps {
   isCreateOpen: boolean

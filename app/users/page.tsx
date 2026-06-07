@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Users, Plus, Search, ShieldAlert, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,13 +10,8 @@ import { getUsers, createUser, updateUser, deleteUser } from "@/lib/api";
 import { UsersTable } from "@/components/users/users-table";
 import { UserDialogs } from "@/components/users/user-dialogs";
 
-interface User {
-  id: string;
-  fullName: string;
-  phoneNumber: string;
-  password?: string;
-  createdAt: string;
-}
+import { User } from "@/components/users/types";
+
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -31,7 +26,7 @@ export default function UsersPage() {
   const [submitting, setSubmitting] = useState(false);
 
   // Load users on mount
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getUsers();
@@ -42,7 +37,7 @@ export default function UsersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUsers();

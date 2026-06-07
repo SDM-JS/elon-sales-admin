@@ -13,18 +13,8 @@ import {
   TableRow
 } from "@/components/ui/table"
 
-interface Seller {
-  id: string
-  founder: string
-  brandName: string
-  phoneNumber: string
-  logo?: string | null
-  desc: string
-  email: string
-  latitude?: string | null
-  longitude?: string | null
-  createdAt: string
-}
+import { Seller } from "./types"
+
 
 interface SellersTableProps {
   sellers: Seller[]

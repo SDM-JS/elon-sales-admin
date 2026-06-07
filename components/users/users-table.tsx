@@ -12,13 +12,8 @@ import {
   TableRow
 } from "@/components/ui/table"
 
-interface User {
-  id: string
-  fullName: string
-  phoneNumber: string
-  password?: string
-  createdAt: string
-}
+import { User } from "./types"
+
 
 interface UsersTableProps {
   users: User[]

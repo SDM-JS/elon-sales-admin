@@ -12,9 +12,13 @@ export const api = axios.create({
 
 // Add an interceptor to handle FormData automatically
 api.interceptors.request.use((config) => {
-  if (config.data instanceof FormData) {
+  if (config.data instanceof FormData && config.headers) {
     // When sending FormData, let the browser/Axios set the Content-Type with the boundary
-    delete config.headers["Content-Type"]
+    if (typeof config.headers.delete === "function") {
+      config.headers.delete("Content-Type")
+    } else {
+      delete (config.headers as any)["Content-Type"]
+    }
   }
   return config
 })
