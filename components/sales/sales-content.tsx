@@ -107,6 +107,7 @@ export function SalesPageContent() {
     formData.append("salePrice", String(values.salePrice))
     formData.append("desc", values.desc || "")
     formData.append("categoryId", values.categoryId)
+    formData.append("sellerId", values.sellerId)
     formData.append("expires", values.expires)
     if (imageFiles && imageFiles.length > 0) {
       for (let i = 0; i < imageFiles.length; i++) {
