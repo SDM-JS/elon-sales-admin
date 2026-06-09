@@ -47,7 +47,6 @@ export default function UsersPage() {
   const onCreateSubmit = async (values: {
     fullName: string;
     phoneNumber: string;
-    password: string;
   }) => {
     console.log("Create User Submit Payload:", values);
     try {
