@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Edit2, Trash2, Key } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -11,18 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-<<<<<<< HEAD
-interface User {
-  id: string;
-  fullName: string;
-  phoneNumber: string;
-  password?: string;
-  createdAt: string;
-}
-=======
-import { User } from "./types";
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+import { User } from "./types"; // Interfeys shu fayldan kelmoqda
 
 interface UsersTableProps {
   users: User[];
@@ -35,28 +24,12 @@ export function UsersTable({ users, onEdit, onDelete }: UsersTableProps) {
     <div className="border border-slate-100 bg-white rounded-2xl overflow-hidden shadow-sm shadow-slate-100/50">
       <Table>
         <TableHeader>
-          {/* ← was <TableHead> */}
           <TableRow className="bg-slate-50/60 border-b border-slate-100">
             <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
-<<<<<<< HEAD
-              ИД
+              ID
             </TableHead>
             <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
-              Имя и Фамилия
-            </TableHead>
-            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
-              Номер телефона
-            </TableHead>
-            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
-              Пароль
-            </TableHead>
-            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
-              Дата регистрации
-            </TableHead>
-            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right">
-              Действия
-=======
-              Исм-Шариф
+              Исм-Шариф / ФИО
             </TableHead>
             <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
               Телефон рақами
@@ -66,7 +39,6 @@ export function UsersTable({ users, onEdit, onDelete }: UsersTableProps) {
             </TableHead>
             <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right">
               Амаллар
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -82,15 +54,10 @@ export function UsersTable({ users, onEdit, onDelete }: UsersTableProps) {
               <TableCell className="px-6 py-4 text-xs font-semibold text-slate-700 font-mono">
                 {user.phoneNumber}
               </TableCell>
-
               <TableCell className="px-6 py-4 text-xs text-slate-500 font-medium">
                 {user.createdAt
-<<<<<<< HEAD
                   ? new Date(user.createdAt).toLocaleString("ru-RU")
-=======
-                  ? new Date(user.createdAt).toLocaleString("uz-UZ")
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
-                  : "—"}
+                  : "-"}
               </TableCell>
               <TableCell className="px-6 py-4 text-right">
                 <div className="flex items-center justify-end gap-2.5">
