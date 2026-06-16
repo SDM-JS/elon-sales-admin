@@ -29,6 +29,7 @@ const createSchema = z.object({
   longitude: z.string().optional(),
 });
 
+<<<<<<< HEAD
 const editSchema = z.object({
   founder: z.string().min(1, "Имя учредителя обязательно для заполнения!"),
   brandName: z.string().min(1, "Название бренда обязательно для заполнения!"),
@@ -61,6 +62,12 @@ interface Seller {
   latitude?: string | null;
   longitude?: string | null;
 }
+=======
+type CreateValues = z.infer<typeof createSchema>
+type EditValues = z.infer<typeof editSchema>
+import { Seller } from "./types"
+
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 interface SellerDialogsProps {
   isCreateOpen: boolean;

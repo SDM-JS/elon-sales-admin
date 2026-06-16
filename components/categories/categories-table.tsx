@@ -13,11 +13,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+<<<<<<< HEAD
 interface Category {
   id: string;
   name: string;
   createdAt: string;
 }
+=======
+import { Category } from "./types"
+
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 interface CategoriesTableProps {
   categories: Category[];

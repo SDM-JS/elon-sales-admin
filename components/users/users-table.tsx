@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+<<<<<<< HEAD
 interface User {
   id: string;
   fullName: string;
@@ -19,6 +20,9 @@ interface User {
   password?: string;
   createdAt: string;
 }
+=======
+import { User } from "./types";
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 interface UsersTableProps {
   users: User[];
@@ -31,8 +35,10 @@ export function UsersTable({ users, onEdit, onDelete }: UsersTableProps) {
     <div className="border border-slate-100 bg-white rounded-2xl overflow-hidden shadow-sm shadow-slate-100/50">
       <Table>
         <TableHeader>
+          {/* ← was <TableHead> */}
           <TableRow className="bg-slate-50/60 border-b border-slate-100">
             <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+<<<<<<< HEAD
               ИД
             </TableHead>
             <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
@@ -49,6 +55,18 @@ export function UsersTable({ users, onEdit, onDelete }: UsersTableProps) {
             </TableHead>
             <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right">
               Действия
+=======
+              Исм-Шариф
+            </TableHead>
+            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+              Телефон рақами
+            </TableHead>
+            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+              Рўйхатдан ўтган сана
+            </TableHead>
+            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right">
+              Амаллар
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -58,26 +76,20 @@ export function UsersTable({ users, onEdit, onDelete }: UsersTableProps) {
               key={user.id}
               className="border-b border-slate-100 hover:bg-slate-50/40 transition-colors"
             >
-              <TableCell className="px-6 py-4">
-                <span className="font-mono text-[10px] bg-slate-50 text-slate-500 px-2 py-1 rounded-md border border-slate-100">
-                  {user.id}
-                </span>
-              </TableCell>
               <TableCell className="px-6 py-4 font-bold text-slate-800 uppercase tracking-wide text-xs">
                 {user.fullName}
               </TableCell>
               <TableCell className="px-6 py-4 text-xs font-semibold text-slate-700 font-mono">
                 {user.phoneNumber}
               </TableCell>
-              <TableCell className="px-6 py-4 text-xs text-slate-500 font-mono">
-                <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg w-fit text-[10px]">
-                  <Key className="h-3.5 w-3.5 text-slate-400" />
-                  <span>{user.password || "•••••"}</span>
-                </div>
-              </TableCell>
+
               <TableCell className="px-6 py-4 text-xs text-slate-500 font-medium">
                 {user.createdAt
+<<<<<<< HEAD
                   ? new Date(user.createdAt).toLocaleString("ru-RU")
+=======
+                  ? new Date(user.createdAt).toLocaleString("uz-UZ")
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                   : "—"}
               </TableCell>
               <TableCell className="px-6 py-4 text-right">

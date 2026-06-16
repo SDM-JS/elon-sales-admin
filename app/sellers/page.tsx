@@ -10,6 +10,7 @@ import {
   getSellers,
   createSeller,
   updateSeller,
+<<<<<<< HEAD
   deleteSeller,
 } from "@/lib/api";
 import { SellersTable } from "@/components/sellers/sellers-table";
@@ -27,6 +28,14 @@ interface Seller {
   longitude?: string | null;
   createdAt: string;
 }
+=======
+  deleteSeller
+} from "@/lib/api"
+import { SellersTable } from "@/components/sellers/sellers-table"
+import { SellerDialogs } from "@/components/sellers/seller-dialogs"
+import { Seller } from "@/components/sellers/types"
+
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 export default function SellersPage() {
   const [sellers, setSellers] = useState<Seller[]>([]);
@@ -105,6 +114,7 @@ export default function SellersPage() {
 
   // Handle Edit Submit
   const onEditSubmit = async (values: any, logoFile: File | null) => {
+<<<<<<< HEAD
     if (!selectedSeller) return;
     const formData = new FormData();
     formData.append("brandName", values.brandName);
@@ -115,6 +125,19 @@ export default function SellersPage() {
     if (values.password) formData.append("password", values.password);
     formData.append("latitude", values.latitude || "");
     formData.append("longitude", values.longitude || "");
+=======
+    if (!selectedSeller) return
+
+    const formData = new FormData()
+    formData.append("brandName", values.brandName)
+    formData.append("founder", values.founder)
+    formData.append("phoneNumber", values.phoneNumber)
+    formData.append("email", values.email)
+    formData.append("desc", values.desc)
+    if (values.password) formData.append("password", values.password)
+    formData.append("latitude", values.latitude || "")
+    formData.append("longitude", values.longitude || "")
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
     if (logoFile) {
       formData.append("logo", logoFile);
     }
@@ -215,6 +238,7 @@ export default function SellersPage() {
       ) : (
         <SellersTable
           sellers={filteredSellers}
+<<<<<<< HEAD
           onEdit={(s) => {
             setSelectedSeller(s);
             setIsEditOpen(true);
@@ -223,6 +247,10 @@ export default function SellersPage() {
             setSelectedSeller(s);
             setIsDeleteOpen(true);
           }}
+=======
+          onEdit={(s) => { setSelectedSeller(s); setIsEditOpen(true) }}
+          onDelete={(s) => { setSelectedSeller(s); setIsDeleteOpen(true) }}
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
         />
       )}
 

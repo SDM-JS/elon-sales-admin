@@ -28,6 +28,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 // Zod validation schema
 const salesSchema = z
   .object({
+<<<<<<< HEAD
     productName: z.string().min(1, "Название товара обязательно к заполнению!"),
     lastPrice: z.coerce
       .number()
@@ -42,11 +43,28 @@ const salesSchema = z
   })
   .refine((data) => data.salePrice < data.lastPrice, {
     message: "Цена со скидкой должна быть меньше исходной цены!",
+=======
+    productName: z.string().min(1, "Маҳсулот номи киритилиши шарт!"),
+    lastPrice: z.coerce
+      .number()
+      .positive("Асл нарх ноль ёки ундан катта бўлиши лозим!"),
+    salePrice: z.coerce
+      .number()
+      .positive("Чегирмадаги нарх ноль ёки ундан катта бўлиши лозим!"),
+    desc: z.string().optional().or(z.literal("")),
+    categoryId: z.string().min(1, "Бўлимни танланг!"),
+    sellerId: z.string().min(1, "Сотувчини танланг!"),
+    expires: z.string().min(1, "Амал қилиш муддатини танланг!"),
+  })
+  .refine((data) => data.salePrice < data.lastPrice, {
+    message: "Чегирмадаги нарх асл нархдан арзон бўлиши шарт!",
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
     path: ["salePrice"],
   });
 
 type SalesFormValues = z.infer<typeof salesSchema>;
 
+<<<<<<< HEAD
 interface Sale {
   id: string;
   productName: string;
@@ -68,6 +86,10 @@ interface Category {
   id: string;
   name: string;
 }
+=======
+import { Sale, Seller, Category } from "./types"
+
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 interface SalesDialogsProps {
   isCreateOpen: boolean;
@@ -126,7 +148,10 @@ export function SalesDialogs({
       sellerId: "",
       expires: "",
     },
+<<<<<<< HEAD
     key: formKey,
+=======
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
   });
 
   useEffect(() => {
@@ -172,13 +197,21 @@ export function SalesDialogs({
         <DialogContent className="max-w-lg overflow-y-auto max-h-[90vh] rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-slate-900 uppercase">
+<<<<<<< HEAD
               Добавить новую скидку
+=======
+              Янги Чегирма Қўшиш
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(handleCreate)} className="space-y-4">
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold uppercase text-slate-400">
+<<<<<<< HEAD
                 Товар
+=======
+                Маҳсулот
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </label>
               <Input
                 {...register("productName")}
@@ -194,7 +227,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <DollarSign className="h-3 w-3" />
+<<<<<<< HEAD
                   Исходная цена
+=======
+                  Асл Нарх
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <Input
                   type="number"
@@ -210,7 +247,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <DollarSign className="h-3 w-3" />
+<<<<<<< HEAD
                   Цена со скидкой
+=======
+                  Чегирма Нархи
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <Input
                   type="number"
@@ -228,13 +269,21 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <Store className="h-3 w-3" />
+<<<<<<< HEAD
                   Продавец
+=======
+                  Сотувчи
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <NativeSelect
                   {...register("sellerId")}
                   className="w-full rounded-xl"
                 >
+<<<<<<< HEAD
                   <option value="">Выберите продавца...</option>
+=======
+                  <option value="">Сотувчини танланг...</option>
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                   {sellers.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.brandName}
@@ -250,13 +299,21 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <FolderOpen className="h-3 w-3" />
+<<<<<<< HEAD
                   Категория
+=======
+                  Бўлим
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <NativeSelect
                   {...register("categoryId")}
                   className="w-full rounded-xl"
                 >
+<<<<<<< HEAD
                   <option value="">Выберите категорию...</option>
+=======
+                  <option value="">Бўлимни танланг...</option>
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                   {categories.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name}
@@ -274,7 +331,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
+<<<<<<< HEAD
                   Срок действия
+=======
+                  Муддат
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <Input
                   type="date"
@@ -290,7 +351,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <ImageIcon className="h-3 w-3" />
+<<<<<<< HEAD
                   Изображение товара
+=======
+                  Маҳсулот Расми
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <input
                   type="file"
@@ -303,7 +368,11 @@ export function SalesDialogs({
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold uppercase text-slate-400">
+<<<<<<< HEAD
                 Описание
+=======
+                Тавсиф
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </label>
               <textarea
                 {...register("desc")}
@@ -318,7 +387,11 @@ export function SalesDialogs({
                 onClick={() => setIsCreateOpen(false)}
                 className="rounded-xl"
               >
+<<<<<<< HEAD
                 Отмена
+=======
+                Бекор қилиш
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </Button>
               <Button
                 type="submit"
@@ -328,7 +401,11 @@ export function SalesDialogs({
                 {submitting && (
                   <Loader2 className="h-3 w-3 animate-spin mr-1" />
                 )}
+<<<<<<< HEAD
                 Сохранить
+=======
+                Сақлаш
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </Button>
             </DialogFooter>
           </form>
@@ -340,13 +417,21 @@ export function SalesDialogs({
         <DialogContent className="max-w-lg overflow-y-auto max-h-[90vh] rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-slate-900 uppercase">
+<<<<<<< HEAD
               Редактировать товар
+=======
+              Маҳсулотни Таҳрирлаш
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(handleEdit)} className="space-y-4">
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold uppercase text-slate-400">
+<<<<<<< HEAD
                 Товар
+=======
+                Маҳсулот
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </label>
               <Input
                 {...register("productName")}
@@ -362,7 +447,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <DollarSign className="h-3 w-3" />
+<<<<<<< HEAD
                   Исходная цена
+=======
+                  Асл Нарх
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <Input
                   type="number"
@@ -378,7 +467,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <DollarSign className="h-3 w-3" />
+<<<<<<< HEAD
                   Цена со скидкой
+=======
+                  Чегирма Нархи
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <Input
                   type="number"
@@ -396,7 +489,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <Store className="h-3 w-3" />
+<<<<<<< HEAD
                   Продавец
+=======
+                  Сотувчи
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <NativeSelect
                   {...register("sellerId")}
@@ -417,7 +514,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <FolderOpen className="h-3 w-3" />
+<<<<<<< HEAD
                   Категория
+=======
+                  Бўлим
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <NativeSelect
                   {...register("categoryId")}
@@ -440,7 +541,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
+<<<<<<< HEAD
                   Срок действия
+=======
+                  Муддат
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <Input
                   type="date"
@@ -456,7 +561,11 @@ export function SalesDialogs({
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1">
                   <ImageIcon className="h-3 w-3" />
+<<<<<<< HEAD
                   Новые изображения (опционально)
+=======
+                  Янги расмлар (ихтиёрий)
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 </label>
                 <input
                   type="file"
@@ -469,7 +578,11 @@ export function SalesDialogs({
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold uppercase text-slate-400">
+<<<<<<< HEAD
                 Описание
+=======
+                Тавсиф
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </label>
               <textarea
                 {...register("desc")}
@@ -484,7 +597,11 @@ export function SalesDialogs({
                 onClick={() => setIsEditOpen(false)}
                 className="rounded-xl"
               >
+<<<<<<< HEAD
                 Отмена
+=======
+                Бекор қилиш
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </Button>
               <Button
                 type="submit"
@@ -494,7 +611,11 @@ export function SalesDialogs({
                 {submitting && (
                   <Loader2 className="h-3 w-3 animate-spin mr-1" />
                 )}
+<<<<<<< HEAD
                 Обновить
+=======
+                Янгилаш
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </Button>
             </DialogFooter>
           </form>
@@ -506,12 +627,20 @@ export function SalesDialogs({
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-rose-600 uppercase">
+<<<<<<< HEAD
               Удаление товара
+=======
+              Маҳсулотни ўчириш
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </DialogTitle>
           </DialogHeader>
           {selectedSale && (
             <div className="my-2 p-3 bg-slate-50 border rounded-xl text-xs font-bold text-slate-700">
+<<<<<<< HEAD
               Товар: {selectedSale.productName}
+=======
+              Маҳсулот: {selectedSale.productName}
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </div>
           )}
           <DialogFooter className="flex gap-2 justify-end">
@@ -521,7 +650,11 @@ export function SalesDialogs({
               onClick={() => setIsDeleteOpen(false)}
               className="rounded-xl"
             >
+<<<<<<< HEAD
               Отмена
+=======
+              Бекор қилиш
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </Button>
             <Button
               variant="destructive"
@@ -530,7 +663,11 @@ export function SalesDialogs({
               className="rounded-xl"
             >
               {submitting && <Loader2 className="h-3 w-3 animate-spin mr-1" />}
+<<<<<<< HEAD
               Да, удалить
+=======
+              Ҳа, ўчирилсин
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -15,14 +15,19 @@ import {
 import { CategoriesTable } from "@/components/categories/categories-table";
 import { CategoryDialogs } from "@/components/categories/category-dialogs";
 
+
 interface Category {
   id: string;
   name: string;
   createdAt: string;
 }
 
+import { Category } from "@/components/categories/types"
+
+
+
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 

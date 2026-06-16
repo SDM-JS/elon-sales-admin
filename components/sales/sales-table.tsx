@@ -16,6 +16,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
+<<<<<<< HEAD
   TableRow,
 } from "@/components/ui/table";
 
@@ -33,6 +34,12 @@ interface Sale {
   seller?: { brandName: string };
   categories?: { name: string };
 }
+=======
+  TableRow
+} from "@/components/ui/table"
+import { Sale } from "./types"
+
+>>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 interface CarouselItem {
   id: string;
