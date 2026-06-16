@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ELON Бошқарув Панели",
-  description: "ELON платформаси бошқарув тизими",
+  title: "Панель управления ELON",
+  description: "Система управления платформой ELON",
 };
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="uz"
+      lang="ru"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
@@ -41,7 +41,9 @@ export default function RootLayout({
                   <div className="flex items-center gap-2">
                     <SidebarTrigger className="-ml-1 rounded-none border border-border bg-white hover:bg-zinc-50" />
                     <div className="h-4 w-[1px] bg-border mx-2" />
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Бошқарув консоли</span>
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                      Консоль управления
+                    </span>
                   </div>
                 </header>
                 <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-zinc-50/30">
@@ -56,4 +58,3 @@ export default function RootLayout({
     </html>
   );
 }
-

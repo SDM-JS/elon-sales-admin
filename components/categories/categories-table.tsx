@@ -1,40 +1,49 @@
-"use client"
+"use client";
 
-import React from "react"
-import Link from "next/link"
-import { Edit2, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import React from "react";
+import Link from "next/link";
+import { Edit2, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from "@/components/ui/table"
-
+  TableRow,
+} from "@/components/ui/table";
 
 interface Category {
-  id: string
-  name: string
-  createdAt: string
+  id: string;
+  name: string;
+  createdAt: string;
 }
 
 interface CategoriesTableProps {
-  categories: Category[]
-  onEdit: (cat: Category) => void
-  onDelete: (cat: Category) => void
+  categories: Category[];
+  onEdit: (cat: Category) => void;
+  onDelete: (cat: Category) => void;
 }
 
-export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTableProps) {
+export function CategoriesTable({
+  categories,
+  onEdit,
+  onDelete,
+}: CategoriesTableProps) {
   return (
     <div className="border border-slate-100 bg-white rounded-2xl overflow-hidden shadow-sm shadow-slate-100/50">
       <Table>
         <TableHeader>
           <TableRow className="bg-slate-50/60 border-b border-slate-100">
-            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Номи</TableHead>
-            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Яратилган Вақти</TableHead>
-            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right">Амаллар</TableHead>
+            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+              Название
+            </TableHead>
+            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+              Время создания
+            </TableHead>
+            <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right">
+              Действия
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -52,7 +61,9 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
                 </Link>
               </TableCell>
               <TableCell className="px-6 py-4 text-xs text-slate-500 font-medium">
-                {cat.createdAt ? new Date(cat.createdAt).toLocaleString("uz-UZ") : "—"}
+                {cat.createdAt
+                  ? new Date(cat.createdAt).toLocaleString("ru-RU")
+                  : "—"}
               </TableCell>
               <TableCell className="px-6 py-4 text-right">
                 <div className="flex items-center justify-end gap-2.5">
@@ -63,7 +74,7 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
                     className="h-8 rounded-xl border-slate-150 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all cursor-pointer text-[10px] uppercase font-bold tracking-wider"
                   >
                     <Edit2 className="h-3 w-3 mr-1 text-slate-400 group-hover:text-indigo-600" />
-                    Таҳрирлаш
+                    Редактировать
                   </Button>
                   <Button
                     variant="ghost"
@@ -72,7 +83,7 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
                     className="h-8 rounded-xl text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-all cursor-pointer text-[10px] uppercase font-bold tracking-wider"
                   >
                     <Trash2 className="h-3 w-3 mr-1 text-rose-400" />
-                    Ўчириш
+                    Удалить
                   </Button>
                 </div>
               </TableCell>
@@ -81,5 +92,5 @@ export function CategoriesTable({ categories, onEdit, onDelete }: CategoriesTabl
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

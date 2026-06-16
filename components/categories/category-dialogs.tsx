@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import React from "react"
-import { Loader2 } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
+import React from "react";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import {
   Dialog,
@@ -12,34 +12,34 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const categorySchema = z.object({
-  name: z.string().min(1, "Бўлим номи киритилиши шарт!"),
-})
+  name: z.string().min(1, "Название категории обязательно к заполнению!"),
+});
 
-type CategoryFormValues = z.infer<typeof categorySchema>
+type CategoryFormValues = z.infer<typeof categorySchema>;
 
 interface Category {
-  id: string
-  name: string
+  id: string;
+  name: string;
 }
 
 interface CategoryDialogsProps {
-  isCreateOpen: boolean
-  setIsCreateOpen: (open: boolean) => void
-  isEditOpen: boolean
-  setIsEditOpen: (open: boolean) => void
-  isDeleteOpen: boolean
-  setIsDeleteOpen: (open: boolean) => void
-  selectedCategory: Category | null
-  submitting: boolean
-  onCreateSubmit: (values: CategoryFormValues) => Promise<void>
-  onEditSubmit: (values: CategoryFormValues) => Promise<void>
-  onDeleteConfirm: () => Promise<void>
+  isCreateOpen: boolean;
+  setIsCreateOpen: (open: boolean) => void;
+  isEditOpen: boolean;
+  setIsEditOpen: (open: boolean) => void;
+  isDeleteOpen: boolean;
+  setIsDeleteOpen: (open: boolean) => void;
+  selectedCategory: Category | null;
+  submitting: boolean;
+  onCreateSubmit: (values: CategoryFormValues) => Promise<void>;
+  onEditSubmit: (values: CategoryFormValues) => Promise<void>;
+  onDeleteConfirm: () => Promise<void>;
 }
 
 export function CategoryDialogs({
@@ -53,37 +53,36 @@ export function CategoryDialogs({
   submitting,
   onCreateSubmit,
   onEditSubmit,
-  onDeleteConfirm
+  onDeleteConfirm,
 }: CategoryDialogsProps) {
-  
   // React Hook Form for Create
   const createForm = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
-    defaultValues: { name: "" }
-  })
+    defaultValues: { name: "" },
+  });
 
   // React Hook Form for Edit
   const editForm = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
-    defaultValues: { name: "" }
-  })
+    defaultValues: { name: "" },
+  });
 
   // Populate edit form when selectedCategory changes
   React.useEffect(() => {
     if (selectedCategory) {
-      editForm.setValue("name", selectedCategory.name)
+      editForm.setValue("name", selectedCategory.name);
     }
-  }, [selectedCategory])
+  }, [selectedCategory]);
 
   const handleCreate = async (values: CategoryFormValues) => {
-    await onCreateSubmit(values)
-    createForm.reset()
-  }
+    await onCreateSubmit(values);
+    createForm.reset();
+  };
 
   const handleEdit = async (values: CategoryFormValues) => {
-    await onEditSubmit(values)
-    editForm.reset()
-  }
+    await onEditSubmit(values);
+    editForm.reset();
+  };
 
   return (
     <>
@@ -91,19 +90,27 @@ export function CategoryDialogs({
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent className="max-w-md rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-slate-900 uppercase tracking-wide">Янги Бўлим Қўшиш</DialogTitle>
+            <DialogTitle className="text-base font-bold text-slate-900 uppercase tracking-wide">
+              Добавить новую категорию
+            </DialogTitle>
             <DialogDescription className="text-xs text-slate-400">
-              Тизимга янги маҳсулот тоифасини қўшиш учун қуйидаги майдонни тўлдиринг.
+              Заполните следующее поле, чтобы добавить новую категорию товаров в
+              систему.
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={createForm.handleSubmit(handleCreate)} className="space-y-4 my-2">
+          <form
+            onSubmit={createForm.handleSubmit(handleCreate)}
+            className="space-y-4 my-2"
+          >
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Бўлим Номи</label>
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                Название категории
+              </label>
               <Input
                 type="text"
                 {...createForm.register("name")}
-                placeholder="Масалан: Кийим-кечак"
+                placeholder="Например: Одежда"
                 className="rounded-xl border-slate-200"
               />
               {createForm.formState.errors.name && (
@@ -120,15 +127,17 @@ export function CategoryDialogs({
                 onClick={() => setIsCreateOpen(false)}
                 className="rounded-xl cursor-pointer"
               >
-                Бекор қилиш
+                Отмена
               </Button>
               <Button
                 type="submit"
                 disabled={submitting}
                 className="rounded-xl cursor-pointer"
               >
-                {submitting && <Loader2 className="h-3 w-3 animate-spin mr-1" />}
-                Сақлаш
+                {submitting && (
+                  <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                )}
+                Сохранить
               </Button>
             </DialogFooter>
           </form>
@@ -139,15 +148,22 @@ export function CategoryDialogs({
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="max-w-md rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-slate-900 uppercase tracking-wide">Бўлимни Таҳрирлаш</DialogTitle>
+            <DialogTitle className="text-base font-bold text-slate-900 uppercase tracking-wide">
+              Редактировать категорию
+            </DialogTitle>
             <DialogDescription className="text-xs text-slate-400">
-              Бўлим номини ўзгартириш.
+              Изменение названия категории.
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={editForm.handleSubmit(handleEdit)} className="space-y-4 my-2">
+          <form
+            onSubmit={editForm.handleSubmit(handleEdit)}
+            className="space-y-4 my-2"
+          >
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Бўлим Номи</label>
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                Название категории
+              </label>
               <Input
                 type="text"
                 {...editForm.register("name")}
@@ -165,19 +181,21 @@ export function CategoryDialogs({
                 type="button"
                 variant="outline"
                 onClick={() => {
-                  setIsEditOpen(false)
+                  setIsEditOpen(false);
                 }}
                 className="rounded-xl cursor-pointer"
               >
-                Бекор қилиш
+                Отмена
               </Button>
               <Button
                 type="submit"
                 disabled={submitting}
                 className="rounded-xl cursor-pointer"
               >
-                {submitting && <Loader2 className="h-3 w-3 animate-spin mr-1" />}
-                Янгилаш
+                {submitting && (
+                  <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                )}
+                Обновить
               </Button>
             </DialogFooter>
           </form>
@@ -188,15 +206,17 @@ export function CategoryDialogs({
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-rose-600 uppercase tracking-wide">Ўчиришни тасдиқланг</DialogTitle>
+            <DialogTitle className="text-base font-bold text-rose-600 uppercase tracking-wide">
+              Подтвердите удаление
+            </DialogTitle>
             <DialogDescription className="text-xs text-slate-400">
-              Сиз ҳақиқатдан ҳам ушбу бўлимни ўчириб юбормоқчимисиз?
+              Вы действительно хотите удалить эту категорию?
             </DialogDescription>
           </DialogHeader>
 
           {selectedCategory && (
             <div className="my-4 p-3 border border-slate-100 bg-slate-50 text-xs font-bold uppercase text-slate-700 rounded-xl">
-              Бўлим: {selectedCategory.name}
+              Категория: {selectedCategory.name}
             </div>
           )}
 
@@ -207,7 +227,7 @@ export function CategoryDialogs({
               onClick={() => setIsDeleteOpen(false)}
               className="rounded-xl cursor-pointer"
             >
-              Бекор қилиш
+              Отмена
             </Button>
             <Button
               variant="destructive"
@@ -216,11 +236,11 @@ export function CategoryDialogs({
               className="rounded-xl cursor-pointer"
             >
               {submitting && <Loader2 className="h-3 w-3 animate-spin mr-1" />}
-              Ҳа, ўчирилсин
+              Да, удалить
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

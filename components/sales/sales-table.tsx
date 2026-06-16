@@ -1,160 +1,175 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from "react"
-import { Edit2, Trash2, PlusCircle, Loader2, Eye, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { 
-  createCarusel, 
-  getCarusels, 
-  deleteCarusel, 
-  updateCarusel 
-} from "@/lib/api" // API faylingizga to'g'ri yo'lni yozing
+import React, { useState, useEffect } from "react";
+import { Edit2, Trash2, PlusCircle, Loader2, Eye, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  createCarusel,
+  getCarusels,
+  deleteCarusel,
+  updateCarusel,
+} from "@/lib/api"; // Укажите правильный путь к вашему API-файлу
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from "@/components/ui/table"
+  TableRow,
+} from "@/components/ui/table";
 
 interface Sale {
-  id: string
-  productName: string
-  images: string[]
-  lastPrice: number
-  salePrice: number
-  percentageDiscount: number
-  desc?: string | null
-  expires: string
-  sellerId: string
-  categoryId: string
-  seller?: { brandName: string }
-  categories?: { name: string }
+  id: string;
+  productName: string;
+  images: string[];
+  lastPrice: number;
+  salePrice: number;
+  percentageDiscount: number;
+  desc?: string | null;
+  expires: string;
+  sellerId: string;
+  categoryId: string;
+  seller?: { brandName: string };
+  categories?: { name: string };
 }
 
 interface CarouselItem {
-  id: string
-  image: string
-  saleId: string
-  sale?: Sale
+  id: string;
+  image: string;
+  saleId: string;
+  sale?: Sale;
 }
 
 interface SalesTableProps {
-  sales: Sale[]
-  onEdit: (sale: Sale) => void
-  onDelete: (sale: Sale) => void
-  onCarouselSuccess?: () => void
+  sales: Sale[];
+  onEdit: (sale: Sale) => void;
+  onDelete: (sale: Sale) => void;
+  onCarouselSuccess?: () => void;
 }
 
-export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: SalesTableProps) {
-  const [selectedSaleIds, setSelectedSaleIds] = useState<string[]>([])
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  
-  // Karusel holatlari (State)
-  const [carousels, setCarousels] = useState<CarouselItem[]>([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isLoadingCarousels, setIsLoadingCarousels] = useState(false)
+export function SalesTable({
+  sales,
+  onEdit,
+  onDelete,
+  onCarouselSuccess,
+}: SalesTableProps) {
+  const [selectedSaleIds, setSelectedSaleIds] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Karusellarni backenddan yuklab olish
+  // Состояния карусели
+  const [carousels, setCarousels] = useState<CarouselItem[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoadingCarousels, setIsLoadingCarousels] = useState(false);
+
+  // Загрузка элементов карусели с бэкенда
   const fetchCarousels = async () => {
     try {
-      setIsLoadingCarousels(true)
-      const data = await getCarusels()
-      setCarousels(data)
+      setIsLoadingCarousels(true);
+      const data = await getCarusels();
+      setCarousels(data);
     } catch (error) {
-      console.error("Ошибка при загрузке карусели:", error)
+      console.error("Ошибка при загрузке карусели:", error);
     } finally {
-      setIsLoadingCarousels(false)
+      setIsLoadingCarousels(false);
     }
-  }
+  };
 
-  // Modal ochilganda karusellarni yangilash
+  // Обновление карусели при открытии модального окна
   useEffect(() => {
     if (isModalOpen) {
-      fetchCarousels()
+      fetchCarousels();
     }
-  }, [isModalOpen])
+  }, [isModalOpen]);
 
-  // Bitta elementni tanlash
+  // Выбор одного элемента
   const handleSelectSale = (id: string) => {
     setSelectedSaleIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    )
-  }
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
+  };
 
-  // Barcha elementlarni tanlash
+  // Выбор всех элементов
   const handleSelectAll = () => {
     if (selectedSaleIds.length === sales.length) {
-      setSelectedSaleIds([])
+      setSelectedSaleIds([]);
     } else {
-      setSelectedSaleIds(sales.map((sale) => sale.id))
+      setSelectedSaleIds(sales.map((sale) => sale.id));
     }
-  }
+  };
 
-  // Tanlangan tovarlarni karuselga qo'shish (POST)
+  // Добавление выбранных товаров в карусель (POST)
   const handleSendToCarousel = async () => {
-    if (selectedSaleIds.length === 0) return
+    if (selectedSaleIds.length === 0) return;
 
     const carouselPayload = sales
       .filter((sale) => selectedSaleIds.includes(sale.id))
       .map((sale) => ({
         image: sale.images && sale.images[0] ? sale.images[0] : "",
-        saleId: sale.id
-      }))
+        saleId: sale.id,
+      }));
 
     try {
-      setIsSubmitting(true)
-      await createCarusel(carouselPayload)
-      alert("Товары успешно добавлены в карусель!")
-      setSelectedSaleIds([])
-      if (onCarouselSuccess) onCarouselSuccess()
+      setIsSubmitting(true);
+      await createCarusel(carouselPayload);
+      alert("Товары успешно добавлены в карусель!");
+      setSelectedSaleIds([]);
+      if (onCarouselSuccess) onCarouselSuccess();
     } catch (error: any) {
-      console.error("Ошибка при добавлении в карусель:", error)
-      alert(error?.response?.data?.message || "Произошла ошибка при добавлении в карусель")
+      console.error("Ошибка при добавлении в карусель:", error);
+      alert(
+        error?.response?.data?.message ||
+          "Произошла ошибка при добавлении в карусель",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  // Karusel elementini o'chirish (DELETE)
+  // Удаление элемента карусели (DELETE)
   const handleDeleteCarouselItem = async (id: string) => {
-    if (!confirm("Вы уверены, что хотите удалить этот элемент из карусели?")) return
+    if (!confirm("Вы уверены, что хотите удалить этот элемент из карусели?"))
+      return;
 
     try {
-      await deleteCarusel(id)
-      setCarousels((prev) => prev.filter((item) => item.id !== id))
-      alert("Элемент успешно удален из карусели")
+      await deleteCarusel(id);
+      setCarousels((prev) => prev.filter((item) => item.id !== id));
+      alert("Элемент успешно удален из карусели");
     } catch (error) {
-      console.error("Ошибка при удалении карусели:", error)
-      alert("Не удалось удалить элемент")
+      console.error("Ошибка при удалении карусели:", error);
+      alert("Не удалось удалить элемент");
     }
-  }
+  };
 
-  // Karusel elementidagi rasm URL manzilini tahrirlash (PUT)
+  // Редактирование URL-адреса изображения элемента карусели (PUT)
   const handleEditCarouselItem = async (id: string, currentImage: string) => {
-    const newImageUrl = prompt("Введите новый URL-адрес изображения для карусели:", currentImage)
-    if (newImageUrl === null || newImageUrl.trim() === "") return
+    const newImageUrl = prompt(
+      "Введите новый URL-адрес изображения для карусели:",
+      currentImage,
+    );
+    if (newImageUrl === null || newImageUrl.trim() === "") return;
 
     try {
-      await updateCarusel(id, { image: newImageUrl })
+      await updateCarusel(id, { image: newImageUrl });
       setCarousels((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, image: newImageUrl } : item))
-      )
-      alert("Изображение карусели успешно обновлено!")
+        prev.map((item) =>
+          item.id === id ? { ...item, image: newImageUrl } : item,
+        ),
+      );
+      alert("Изображение карусели успешно обновлено!");
     } catch (error) {
-      console.error("Ошибка при обновлении карусели:", error)
-      alert("Не удалось обновить изображение")
+      console.error("Ошибка при обновлении карусели:", error);
+      alert("Не удалось обновить изображение");
     }
-  }
+  };
 
   return (
     <div className="space-y-4">
-      
-      {/* Yuqori boshqaruv paneli */}
+      {/* Верхняя панель управления */}
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Управление скидками</h2>
+        <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
+          Управление скидками
+        </h2>
         <Button
           onClick={() => setIsModalOpen(true)}
           variant="outline"
@@ -165,7 +180,7 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
         </Button>
       </div>
 
-      {/* Agar tovarlar tanlansa, qo'shish paneli chiqadi */}
+      {/* Панель добавления, если товары выбраны */}
       {selectedSaleIds.length > 0 && (
         <div className="flex items-center justify-between bg-indigo-50 border border-indigo-100 p-4 rounded-2xl animate-in fade-in-50 duration-200">
           <span className="text-xs font-bold text-indigo-700 uppercase">
@@ -186,34 +201,54 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
         </div>
       )}
 
-      {/* Asosiy e'lonlar jadvali */}
+      {/* Основная таблица объявлений */}
       <div className="border border-slate-100 bg-white rounded-2xl overflow-hidden shadow-sm shadow-slate-100/50">
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/60 border-b border-slate-100">
               <TableHead className="w-[50px] px-4 py-4 text-center">
                 <Checkbox
-                  checked={sales.length > 0 && selectedSaleIds.length === sales.length}
+                  checked={
+                    sales.length > 0 && selectedSaleIds.length === sales.length
+                  }
                   onCheckedChange={handleSelectAll}
                   disabled={isSubmitting}
                 />
               </TableHead>
-              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Фото</TableHead>
-              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Товар</TableHead>
-              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Категория</TableHead>
-              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Магазин / Продавец</TableHead>
-              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Цены</TableHead>
-              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Скидка</TableHead>
-              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">Срок действия</TableHead>
-              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right">Действия</TableHead>
+              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+                Фото
+              </TableHead>
+              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+                Товар
+              </TableHead>
+              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+                Категория
+              </TableHead>
+              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+                Магазин / Продавец
+              </TableHead>
+              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+                Цены
+              </TableHead>
+              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+                Скидка
+              </TableHead>
+              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest">
+                Срок действия
+              </TableHead>
+              <TableHead className="px-6 py-4 font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right">
+                Действия
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {sales.map((sale) => (
-              <TableRow 
-                key={sale.id} 
+              <TableRow
+                key={sale.id}
                 className={`border-b border-slate-100 hover:bg-slate-50/40 transition-colors ${
-                  selectedSaleIds.includes(sale.id) ? "bg-indigo-50/20 hover:bg-indigo-50/30" : ""
+                  selectedSaleIds.includes(sale.id)
+                    ? "bg-indigo-50/20 hover:bg-indigo-50/30"
+                    : ""
                 }`}
               >
                 <TableCell className="px-4 py-4 text-center">
@@ -230,7 +265,7 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
                       alt={sale.productName}
                       className="h-10 w-10 object-cover border border-slate-100 rounded-xl shadow-inner"
                       onError={(e) => {
-                        (e.target as HTMLElement).style.display = "none"
+                        (e.target as HTMLElement).style.display = "none";
                       }}
                     />
                   ) : (
@@ -243,14 +278,22 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
                   {sale.productName}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-xs font-semibold text-slate-700 uppercase">
-                  {sale.categories?.name || <span className="text-slate-300">Неизвестно</span>}
+                  {sale.categories?.name || (
+                    <span className="text-slate-300">Неизвестно</span>
+                  )}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-xs font-bold text-slate-700 uppercase">
-                  {sale.seller?.brandName || <span className="text-slate-300">Неизвестно</span>}
+                  {sale.seller?.brandName || (
+                    <span className="text-slate-300">Неизвестно</span>
+                  )}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-xs text-slate-500 font-medium">
-                  <div className="line-through text-slate-300 text-[10px]">{sale.lastPrice.toLocaleString()} сум</div>
-                  <div className="font-bold text-slate-900">{sale.salePrice.toLocaleString()} сум</div>
+                  <div className="line-through text-slate-300 text-[10px]">
+                    {sale.lastPrice.toLocaleString()} сум
+                  </div>
+                  <div className="font-bold text-slate-900">
+                    {sale.salePrice.toLocaleString()} сум
+                  </div>
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   <span className="inline-flex items-center text-[10px] font-extrabold text-rose-600 bg-rose-50 px-2.5 py-0.5 border border-rose-100 uppercase tracking-wider rounded-lg">
@@ -258,7 +301,9 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
                   </span>
                 </TableCell>
                 <TableCell className="px-6 py-4 text-xs text-slate-500 font-mono">
-                  {sale.expires ? new Date(sale.expires).toLocaleDateString("ru-RU") : "—"}
+                  {sale.expires
+                    ? new Date(sale.expires).toLocaleDateString("ru-RU")
+                    : "—"}
                 </TableCell>
                 <TableCell className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2.5">
@@ -290,18 +335,21 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
         </Table>
       </div>
 
-      {/* КАРАУСЕЛЬ ЭЛЕМЕНТЛАРИНИ БОШҚАРИШ МОДАЛИ */}
+      {/* МОДАЛЬНОЕ ОКНО УПРАВЛЕНИЯ ЭЛЕМЕНТАМИ КАРУСЕЛИ */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-150">
           <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col shadow-xl">
-            
-            {/* Modal Sarlavhasi */}
+            {/* Заголовок модального окна */}
             <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <div>
-                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Текущие элементы карусели</h3>
-                <p className="text-[11px] text-slate-400 mt-0.5">Список товаров, отображаемых на главном баннере</p>
+                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
+                  Текущие элементы карусели
+                </h3>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Список товаров, отображаемых на главном баннере
+                </p>
               </div>
-              <button 
+              <button
                 onClick={() => setIsModalOpen(false)}
                 className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-all cursor-pointer"
               >
@@ -309,7 +357,7 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
               </button>
             </div>
 
-            {/* Modal Tanasi (Karusel jadvali) */}
+            {/* Содержимое модального окна (Таблица карусели) */}
             <div className="p-6 overflow-y-auto flex-1">
               {isLoadingCarousels ? (
                 <div className="py-12 flex flex-col items-center justify-center text-slate-400 gap-2 text-xs font-medium">
@@ -325,25 +373,43 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
                   <Table>
                     <TableHeader className="bg-slate-50/50">
                       <TableRow>
-                        <TableHead className="font-bold text-[10px] text-slate-400 uppercase tracking-widest px-4 py-3">Баннер</TableHead>
-                        <TableHead className="font-bold text-[10px] text-slate-400 uppercase tracking-widest px-4 py-3">Название товара</TableHead>
-                        <TableHead className="font-bold text-[10px] text-slate-400 uppercase tracking-widest px-4 py-3">ID Скидки</TableHead>
-                        <TableHead className="font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right px-4 py-3">Действия</TableHead>
+                        <TableHead className="font-bold text-[10px] text-slate-400 uppercase tracking-widest px-4 py-3">
+                          Баннер
+                        </TableHead>
+                        <TableHead className="font-bold text-[10px] text-slate-400 uppercase tracking-widest px-4 py-3">
+                          Название товара
+                        </TableHead>
+                        <TableHead className="font-bold text-[10px] text-slate-400 uppercase tracking-widest px-4 py-3">
+                          ID Скидки
+                        </TableHead>
+                        <TableHead className="font-bold text-[10px] text-slate-400 uppercase tracking-widest text-right px-4 py-3">
+                          Действия
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {carousels.map((item) => (
-                        <TableRow key={item.id} className="hover:bg-slate-50/30 transition-colors">
+                        <TableRow
+                          key={item.id}
+                          className="hover:bg-slate-50/30 transition-colors"
+                        >
                           <TableCell className="px-4 py-3">
-                            <img 
-                              src={item.image} 
-                              alt="Carousel" 
+                            <img
+                              src={item.image}
+                              alt="Carousel"
                               className="h-10 w-16 object-cover rounded-lg border border-slate-100 shadow-sm"
-                              onError={(e) => { (e.target as HTMLElement).style.display = "none" }}
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display =
+                                  "none";
+                              }}
                             />
                           </TableCell>
                           <TableCell className="font-semibold text-xs text-slate-700 px-4 py-3">
-                            {item.sale?.productName || <span className="text-slate-300 italic">Товар удален или недоступен</span>}
+                            {item.sale?.productName || (
+                              <span className="text-slate-300 italic">
+                                Товар удален или недоступен
+                              </span>
+                            )}
                           </TableCell>
                           <TableCell className="font-mono text-[10px] text-slate-400 px-4 py-3">
                             {item.saleId}
@@ -353,7 +419,9 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => handleEditCarouselItem(item.id, item.image)}
+                                onClick={() =>
+                                  handleEditCarouselItem(item.id, item.image)
+                                }
                                 className="h-7 px-2 text-[10px] font-bold uppercase rounded-lg border-slate-200 hover:bg-indigo-50 hover:text-indigo-600"
                               >
                                 Изменить фото
@@ -361,7 +429,9 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                onClick={() => handleDeleteCarouselItem(item.id)}
+                                onClick={() =>
+                                  handleDeleteCarouselItem(item.id)
+                                }
                                 className="h-7 px-2 text-[10px] font-bold uppercase rounded-lg text-rose-600 hover:bg-rose-50"
                               >
                                 Удалить
@@ -375,21 +445,19 @@ export function SalesTable({ sales, onEdit, onDelete, onCarouselSuccess }: Sales
                 </div>
               )}
             </div>
-            
-            {/* Modal Yopish Qismi */}
+
+            {/* Футер модального окна */}
             <div className="p-4 border-t border-slate-100 bg-slate-50/30 flex justify-end">
-              <Button 
+              <Button
                 onClick={() => setIsModalOpen(false)}
                 className="h-9 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs uppercase tracking-wider rounded-xl cursor-pointer"
               >
                 Закрыть
               </Button>
             </div>
-
           </div>
         </div>
       )}
-
     </div>
-  )
+  );
 }
