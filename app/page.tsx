@@ -1,50 +1,11 @@
 "use client"
-import React from "react";
-import {
-  Store,
-  Tag,
-  FolderOpen,
-  Users,
-  ArrowUpRight,
-  Activity,
-} from "lucide-react";
-import Link from "next/link";
-
-import React, { useEffect, useState } from "react"
-import { 
-  Store, 
-  Tag, 
-  FolderOpen, 
-  Users, 
-  ArrowUpRight, 
-  Activity,
-  Loader2,
-  RefreshCw,
-  CheckCircle2,
-  XCircle
-} from "lucide-react"
+import React, { useEffect, useState, useCallback } from "react"
+import { Store, Tag, FolderOpen, Users, ArrowUpRight, Activity, Loader2, RefreshCw, CheckCircle2, XCircle } from "lucide-react"
 import Link from "next/link"
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-<<<<<<< HEAD
-  CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-=======
-  CardFooter
-} from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { 
-  getSellers, 
-  getSales, 
-  getCategories, 
-  getUsers 
-} from "@/lib/api"
+import { getSellers, getSales, getCategories, getUsers } from "@/lib/api"
 
 interface DashboardStats {
   sellers: number | null
@@ -58,7 +19,6 @@ interface ApiStatus {
   responseTime: number | null
   loading: boolean
 }
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 export default function Home() {
   const [stats, setStats] = useState<DashboardStats>({
@@ -75,7 +35,8 @@ export default function Home() {
   })
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  const fetchDashboardData = async () => {
+  // Функция получения данных с мемоизацией
+  const fetchDashboardData = useCallback(async () => {
     setLoading(true)
     setApiStatus(prev => ({ ...prev, loading: true }))
     const start = performance.now()
@@ -99,33 +60,28 @@ export default function Home() {
 
       setApiStatus({ connected: true, responseTime: elapsed, loading: false })
       setLastUpdated(new Date())
-    } catch {
+    } catch (error) {
+      console.error("Ошибка при получении данных дашборда:", error)
       setApiStatus({ connected: false, responseTime: null, loading: false })
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchDashboardData()
-  }, [])
+  }, [fetchDashboardData])
 
   const formatValue = (value: number | null) => {
     if (value === null) return "—"
-    return value.toLocaleString("uz-UZ")
+    return value.toLocaleString("ru-RU")
   }
 
   const statCards = [
     {
-<<<<<<< HEAD
       title: "Всего продавцов",
-      value: "24",
-      description: "Активные коммерческие партнеры",
-=======
-      title: "Жами сотувчилар",
       value: formatValue(stats.sellers),
-      description: "Фаол тижорат ҳамкорлари",
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+      description: "Активные коммерческие партнеры",
       icon: Store,
       link: "/sellers",
       label: "Управление продавцами",
@@ -133,15 +89,9 @@ export default function Home() {
       shadow: "shadow-indigo-100/50",
     },
     {
-<<<<<<< HEAD
       title: "Активные акции",
-      value: "142",
-      description: "Текущие скидочные предложения",
-=======
-      title: "Фаол акциялар",
       value: formatValue(stats.sales),
-      description: "Жорий чегирмали таклифлар",
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+      description: "Текущие скидочные предложения",
       icon: Tag,
       link: "/sales",
       label: "Управление акциями",
@@ -149,15 +99,9 @@ export default function Home() {
       shadow: "shadow-rose-100/50",
     },
     {
-<<<<<<< HEAD
       title: "Категории",
-      value: "12",
-      description: "Разделы товаров в системе",
-=======
-      title: "Категориялар",
       value: formatValue(stats.categories),
-      description: "Тизимдаги маҳсулот бўлимлари",
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+      description: "Разделы товаров в системе",
       icon: FolderOpen,
       link: "/categories",
       label: "Управление категориями",
@@ -165,15 +109,9 @@ export default function Home() {
       shadow: "shadow-orange-100/50",
     },
     {
-<<<<<<< HEAD
       title: "Пользователи",
-      value: "1,204",
-      description: "Зарегистрированные покупатели",
-=======
-      title: "Фойдаланувчилар",
       value: formatValue(stats.users),
-      description: "Рўйхатдан ўтган харидорлар",
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+      description: "Зарегистрированные покупатели",
       icon: Users,
       link: "/users",
       label: "Управление участниками",
@@ -184,29 +122,19 @@ export default function Home() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-      {/* Welcome Section */}
-<<<<<<< HEAD
-      <div className="flex flex-col gap-2 border-b border-slate-100 pb-6">
-        <h1 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
-          Добро пожаловать, Администратор
-        </h1>
-        <p className="text-slate-500 text-xs sm:text-sm uppercase tracking-wide font-medium">
-          Статус системы и ключевые данные платформы ELON.
-        </p>
-=======
       <div className="flex flex-col gap-2 border-b border-slate-100 pb-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-slate-900 uppercase sm:text-3xl">
-            Хуш келибсиз, Администратор
+            Добро пожаловать, Администратор
           </h1>
           <p className="text-slate-500 text-xs sm:text-sm uppercase tracking-wide font-medium mt-1">
-            ELON платформасининг тизим ҳолати ва асосий маълумотлари.
+            Состояние системы и основные данные платформы ELON.
           </p>
         </div>
         <div className="flex items-center gap-3">
           {lastUpdated && (
             <span className="text-[10px] text-slate-400 font-mono uppercase">
-              {lastUpdated.toLocaleTimeString("uz-UZ")}
+              {lastUpdated.toLocaleTimeString("ru-RU")}
             </span>
           )}
           <Button
@@ -217,21 +145,14 @@ export default function Home() {
             className="text-[10px] font-bold uppercase tracking-wider border-slate-200 hover:bg-slate-50"
           >
             <RefreshCw className={`h-3 w-3 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-            Янгилаш
+            Обновить
           </Button>
         </div>
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
       </div>
 
-      {/* Grid of Stats Cards */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-<<<<<<< HEAD
-        {stats.map((stat) => (
-          <Card
-=======
         {statCards.map((stat) => (
-          <Card 
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+          <Card
             key={stat.title}
             className={`transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${stat.shadow} border-slate-100 hover:border-slate-200/80`}
           >
@@ -248,15 +169,6 @@ export default function Home() {
 
             <CardContent className="mt-4 flex flex-col gap-2">
               <div className="flex items-baseline gap-2">
-<<<<<<< HEAD
-                <span className="text-3xl font-black tracking-tight text-slate-900">
-                  {stat.value}
-                </span>
-                <span className="flex items-center text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 border border-emerald-100 gap-1 uppercase tracking-wider rounded-full">
-                  <Activity className="h-2.5 w-2.5 animate-pulse" />
-                  Активен
-                </span>
-=======
                 {loading ? (
                   <Loader2 className="h-7 w-7 animate-spin text-slate-300" />
                 ) : (
@@ -265,10 +177,9 @@ export default function Home() {
                 {!loading && (
                   <span className="flex items-center text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 border border-emerald-100 gap-1 uppercase tracking-wider rounded-full">
                     <Activity className="h-2.5 w-2.5 animate-pulse" />
-                    Фаол
+                    Активно
                   </span>
                 )}
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </div>
               <p className="text-xs text-slate-500 font-medium">
                 {stat.description}
@@ -305,22 +216,10 @@ export default function Home() {
           </CardHeader>
           <CardContent className="space-y-4 text-xs text-slate-600 leading-relaxed">
             <p>
-<<<<<<< HEAD
-              Эта панель управления работает напрямую с базой данных **ELON
-              Backend**. С помощью меню слева вы можете управлять всеми
-              субъектами системы.
+              Эта панель управления работает напрямую с базой данных <strong>ELON Backend</strong>. С помощью меню слева вы можете управлять всеми субъектами системы.
             </p>
             <p>
-              В каждом разделе доступно выполнение полных операций **CRUD
-              (Создание, Чтение, Редактирование, Удаление)**. Внесенные
-              изменения отображаются в приложениях пользователей и продавцов в
-              режиме реального времени.
-=======
-              Ушбу бошқарув панели тўғридан-тўғри <strong>ELON Backend</strong> базаси билан ишлайди. Чап томондаги меню орқали тизимдаги субъектларни бошқаришингиз мумкин.
-            </p>
-            <p>
-              Ҳар бир бўлимда тўлиқ <strong>CRUD (Яратиш, Ўқиш, Таҳрирлаш, Ўчириш)</strong> амалларини бажариш имконияти мавжуд. Киритилган ўзгаришлар фойдаланувчи ва сотувчи иловаларида реал вақтда акс этади.
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+              В каждом разделе доступно выполнение полных операций <strong>CRUD (Создание, Чтение, Редактирование, Удаление)</strong>. Внесенные изменения отображаются в приложениях пользователей и продавцов в режиме реального времени.
             </p>
           </CardContent>
         </Card>
@@ -333,28 +232,20 @@ export default function Home() {
           </CardHeader>
           <CardContent className="space-y-3 font-mono text-[10px]">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-<<<<<<< HEAD
               <span className="text-slate-400 uppercase">Статус API</span>
-              <span className="inline-flex items-center gap-1 font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 border border-emerald-100 uppercase tracking-wider rounded-full">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                Подключено
-              </span>
-=======
-              <span className="text-slate-400 uppercase">API Ҳолати</span>
               {apiStatus.loading ? (
                 <Loader2 className="h-3 w-3 animate-spin text-slate-400" />
               ) : apiStatus.connected ? (
                 <span className="inline-flex items-center gap-1 font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 border border-emerald-100 uppercase tracking-wider rounded-full">
-                  <CheckCircle2 className="h-3 w-3" />
-                  Уланган
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  Подключено
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1 font-bold text-red-600 bg-red-50 px-2 py-0.5 border border-red-100 uppercase tracking-wider rounded-full">
                   <XCircle className="h-3 w-3" />
-                  Хато
+                  Ошибка
                 </span>
               )}
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </div>
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-400 uppercase">База данных</span>
@@ -371,11 +262,7 @@ export default function Home() {
           </CardContent>
 
           <CardFooter className="mt-6 border-t border-slate-50 pt-4 text-[9px] text-slate-500 flex items-center justify-between uppercase bg-slate-50/20">
-<<<<<<< HEAD
             <span>Время ответа:</span>
-            <span className="font-bold text-slate-900">14мс</span>
-=======
-            <span>Жавоб вақти:</span>
             {apiStatus.loading ? (
               <span className="font-bold text-slate-400">—</span>
             ) : (
@@ -383,7 +270,6 @@ export default function Home() {
                 {apiStatus.responseTime !== null ? `${apiStatus.responseTime}мс` : "—"}
               </span>
             )}
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
           </CardFooter>
         </Card>
       </div>

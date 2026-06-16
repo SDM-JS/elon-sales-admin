@@ -12,17 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-<<<<<<< HEAD
-interface Category {
-  id: string;
-  name: string;
-  createdAt: string;
-}
-=======
-import { Category } from "./types"
-
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+import { Category } from "./types"; // Импорт типа из внешнего файла без конфликтов слияния
 
 interface CategoriesTableProps {
   categories: Category[];
@@ -78,7 +68,7 @@ export function CategoriesTable({
                     onClick={() => onEdit(cat)}
                     className="h-8 rounded-xl border-slate-150 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all cursor-pointer text-[10px] uppercase font-bold tracking-wider"
                   >
-                    <Edit2 className="h-3 w-3 mr-1 text-slate-400 group-hover:text-indigo-600" />
+                    <Edit2 className="h-3 w-3 mr-1 text-slate-400" />
                     Редактировать
                   </Button>
                   <Button

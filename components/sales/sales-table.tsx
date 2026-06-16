@@ -4,43 +4,23 @@ import React, { useState, useEffect } from "react";
 import { Edit2, Trash2, PlusCircle, Loader2, Eye, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner"; // Заменено на современный toast вместо alert
+
 import {
   createCarusel,
   getCarusels,
   deleteCarusel,
   updateCarusel,
-} from "@/lib/api"; // Укажите правильный путь к вашему API-файлу
+} from "@/lib/api"; 
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-<<<<<<< HEAD
   TableRow,
 } from "@/components/ui/table";
-
-interface Sale {
-  id: string;
-  productName: string;
-  images: string[];
-  lastPrice: number;
-  salePrice: number;
-  percentageDiscount: number;
-  desc?: string | null;
-  expires: string;
-  sellerId: string;
-  categoryId: string;
-  seller?: { brandName: string };
-  categories?: { name: string };
-}
-=======
-  TableRow
-} from "@/components/ui/table"
-import { Sale } from "./types"
-
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
-
+import { Sale } from "./types";
 interface CarouselItem {
   id: string;
   image: string;
@@ -77,6 +57,7 @@ export function SalesTable({
       setCarousels(data);
     } catch (error) {
       console.error("Ошибка при загрузке карусели:", error);
+      toast.error("Не удалось загрузить элементы карусели");
     } finally {
       setIsLoadingCarousels(false);
     }
@@ -119,12 +100,12 @@ export function SalesTable({
     try {
       setIsSubmitting(true);
       await createCarusel(carouselPayload);
-      alert("Товары успешно добавлены в карусель!");
+      toast.success("Товары успешно добавлены в карусель!");
       setSelectedSaleIds([]);
       if (onCarouselSuccess) onCarouselSuccess();
     } catch (error: any) {
       console.error("Ошибка при добавлении в карусель:", error);
-      alert(
+      toast.error(
         error?.response?.data?.message ||
           "Произошла ошибка при добавлении в карусель",
       );
@@ -141,10 +122,10 @@ export function SalesTable({
     try {
       await deleteCarusel(id);
       setCarousels((prev) => prev.filter((item) => item.id !== id));
-      alert("Элемент успешно удален из карусели");
+      toast.success("Элемент успешно удален из карусели");
     } catch (error) {
       console.error("Ошибка при удалении карусели:", error);
-      alert("Не удалось удалить элемент");
+      toast.error("Не удалось удалить элемент");
     }
   };
 
@@ -163,10 +144,10 @@ export function SalesTable({
           item.id === id ? { ...item, image: newImageUrl } : item,
         ),
       );
-      alert("Изображение карусели успешно обновлено!");
+      toast.success("Изображение карусели успешно обновлено!");
     } catch (error) {
       console.error("Ошибка при обновлении карусели:", error);
-      alert("Не удалось обновить изображение");
+      toast.error("Не удалось обновить изображение");
     }
   };
 

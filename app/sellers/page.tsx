@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Store, Plus, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,32 +10,24 @@ import {
   getSellers,
   createSeller,
   updateSeller,
-<<<<<<< HEAD
   deleteSeller,
 } from "@/lib/api";
 import { SellersTable } from "@/components/sellers/sellers-table";
 import { SellerDialogs } from "@/components/sellers/seller-dialogs";
+import { Seller } from "@/components/sellers/types";
 
-interface Seller {
-  id: string;
-  founder: string;
+// Типизация для значений формы продавца
+interface SellerFormValues {
   brandName: string;
+  founder: string;
   phoneNumber: string;
-  logo?: string | null;
-  desc: string;
   email: string;
-  latitude?: string | null;
-  longitude?: string | null;
-  createdAt: string;
+  desc: string;
+  password?: string;
+  latitude?: string;
+  longitude?: string;
+  whatsappNumber?: string;
 }
-=======
-  deleteSeller
-} from "@/lib/api"
-import { SellersTable } from "@/components/sellers/sellers-table"
-import { SellerDialogs } from "@/components/sellers/seller-dialogs"
-import { Seller } from "@/components/sellers/types"
-
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 export default function SellersPage() {
   const [sellers, setSellers] = useState<Seller[]>([]);
@@ -48,12 +40,8 @@ export default function SellersPage() {
   const [selectedSeller, setSelectedSeller] = useState<Seller | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Fetch sellers on mount
-  useEffect(() => {
-    fetchSellers();
-  }, []);
-
-  const fetchSellers = async () => {
+  // Обернуто в useCallback для предотвращения лишних ререндеров
+  const fetchSellers = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getSellers();
@@ -64,17 +52,22 @@ export default function SellersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Загрузка продавцов при монтировании
+  useEffect(() => {
+    fetchSellers();
+  }, [fetchSellers]);
 
   // Handle Create Submit
-  const onCreateSubmit = async (values: any, logoFile: File | null) => {
+  const onCreateSubmit = async (values: SellerFormValues, logoFile: File | null) => {
     const formData = new FormData();
     formData.append("brandName", values.brandName);
     formData.append("founder", values.founder);
     formData.append("phoneNumber", values.phoneNumber);
     formData.append("email", values.email);
     formData.append("desc", values.desc);
-    formData.append("password", values.password);
+    if (values.password) formData.append("password", values.password);
     if (values.latitude) formData.append("latitude", values.latitude);
     if (values.longitude) formData.append("longitude", values.longitude);
     if (logoFile) {
@@ -89,23 +82,22 @@ export default function SellersPage() {
       setIsCreateOpen(false);
       fetchSellers();
 
-      // WHATSAPPGA TO'LIQ MA'LUMOTLARNI YUBORISH (YARATILGANDA)
+      // ОТПРАВКА ДАННЫХ В WHATSAPP (ПРИ СОЗДАНИИ ОСТАЕТСЯ)
       const targetWhatsAppNumber = values.whatsappNumber || values.phoneNumber;
       if (targetWhatsAppNumber) {
         const cleanWhatsAppNumber = targetWhatsAppNumber.replace(/\D/g, "");
 
-        const messageText = `Здравствуйте, ${values.founder}!\nИнформация о вашем созданном магазине "${values.brandName}":\n\nКонтакты: ${values.phoneNumber}\nEmail: ${values.email}\nПароль: ${values.password}\nАдрес: ${values.latitude || "—"}\nОриентир: ${values.longitude || "—"}`;
+        const messageText = `Здравствуйте, ${values.founder}!\nИнформация о вашем созданном магазине "${values.brandName}":\n\nКонтакты: ${values.phoneNumber}\nEmail: ${values.email}\nПароль: ${values.password || "—"}\nАдрес: ${values.latitude || "—"}\nОриентир: ${values.longitude || "—"}`;
 
         const encodedMessage = encodeURIComponent(messageText);
         const whatsappUrl = `https://web.whatsapp.com/send?phone=${cleanWhatsAppNumber}&text=${encodedMessage}`;
 
-        window.open(whatsappUrl, "_blank");
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       }
     } catch (err: any) {
       console.error("Ошибка при создании продавца:", err);
       toast.error(
-        err.response?.data?.error ||
-          "Произошла ошибка при добавлении продавца.",
+        err.response?.data?.error || "Произошла ошибка при добавлении продавца."
       );
     } finally {
       setSubmitting(false);
@@ -113,8 +105,7 @@ export default function SellersPage() {
   };
 
   // Handle Edit Submit
-  const onEditSubmit = async (values: any, logoFile: File | null) => {
-<<<<<<< HEAD
+  const onEditSubmit = async (values: SellerFormValues, logoFile: File | null) => {
     if (!selectedSeller) return;
     const formData = new FormData();
     formData.append("brandName", values.brandName);
@@ -125,19 +116,6 @@ export default function SellersPage() {
     if (values.password) formData.append("password", values.password);
     formData.append("latitude", values.latitude || "");
     formData.append("longitude", values.longitude || "");
-=======
-    if (!selectedSeller) return
-
-    const formData = new FormData()
-    formData.append("brandName", values.brandName)
-    formData.append("founder", values.founder)
-    formData.append("phoneNumber", values.phoneNumber)
-    formData.append("email", values.email)
-    formData.append("desc", values.desc)
-    if (values.password) formData.append("password", values.password)
-    formData.append("latitude", values.latitude || "")
-    formData.append("longitude", values.longitude || "")
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
     if (logoFile) {
       formData.append("logo", logoFile);
     }
@@ -149,23 +127,13 @@ export default function SellersPage() {
       setIsEditOpen(false);
       fetchSellers();
 
-      // WHATSAPPGA TO'LIQ MA'LUMOTLARNI YUBORISH (TAHRIRLANGANDA)
-      const targetWhatsAppNumber = values.whatsappNumber || values.phoneNumber;
-      if (targetWhatsAppNumber) {
-        const cleanWhatsAppNumber = targetWhatsAppNumber.replace(/\D/g, "");
-
-        const messageText = `Здравствуйте, ${values.founder}!\nДанные вашего магазина "${values.brandName}" были обновлены:\n\nКонтакты: ${values.phoneNumber}\nEmail: ${values.email}\nПароль: ${values.password || "Не изменен"}\nАдрес: ${values.latitude || "—"}\nОриентир: ${values.longitude || "—"}`;
-
-        const encodedMessage = encodeURIComponent(messageText);
-        const whatsappUrl = `https://web.whatsapp.com/send?phone=${cleanWhatsAppNumber}&text=${encodedMessage}`;
-
-        window.open(whatsappUrl, "_blank");
-      }
+      // ВАТСАПГА ЮБОРИШ КИСМИ ОЛИБ ТАШЛАНДИ (РЕДАКТИРОВАНИЕ)
 
       setSelectedSeller(null);
     } catch (err: any) {
+      console.error("Ошибка при обновлении продавца:", err);
       toast.error(
-        err.response?.data?.error || "Произошла ошибка при редактировании.",
+        err.response?.data?.error || "Произошла ошибка при редактировании."
       );
     } finally {
       setSubmitting(false);
@@ -183,19 +151,21 @@ export default function SellersPage() {
       setSelectedSeller(null);
       fetchSellers();
     } catch (err: any) {
+      console.error("Ошибка при удалении продавца:", err);
       toast.error(
-        err.response?.data?.error || "Произошла ошибка при удалении продавца.",
+        err.response?.data?.error || "Произошла ошибка при удалении продавца."
       );
     } finally {
       setSubmitting(false);
     }
   };
 
+  // Фильтрация продавцов
   const filteredSellers = sellers.filter(
     (seller) =>
       seller.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       seller.founder.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      seller.phoneNumber.includes(searchQuery),
+      seller.phoneNumber.includes(searchQuery)
   );
 
   return (
@@ -238,7 +208,6 @@ export default function SellersPage() {
       ) : (
         <SellersTable
           sellers={filteredSellers}
-<<<<<<< HEAD
           onEdit={(s) => {
             setSelectedSeller(s);
             setIsEditOpen(true);
@@ -247,10 +216,6 @@ export default function SellersPage() {
             setSelectedSeller(s);
             setIsDeleteOpen(true);
           }}
-=======
-          onEdit={(s) => { setSelectedSeller(s); setIsEditOpen(true) }}
-          onDelete={(s) => { setSelectedSeller(s); setIsDeleteOpen(true) }}
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
         />
       )}
 

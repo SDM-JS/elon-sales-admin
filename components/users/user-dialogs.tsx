@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { User } from "./types"; // Импорт интерфейса из внешнего файла типов
 
-<<<<<<< HEAD
 // Схемы валидации Zod
 const createUserSchema = z.object({
   fullName: z.string().min(1, "Имя и фамилия обязательны для заполнения!"),
@@ -31,32 +31,10 @@ const editUserSchema = z.object({
   password: z.string().refine((val) => val.length === 0 || val.length >= 6, {
     message: "Пароль должен состоять минимум из 6 символов!",
   }),
-=======
-/// Zod validation schemas
-const createUserSchema = z.object({
-  fullName: z.string().min(1, "Исм-шариф киритилиши шарт!"),
-  phoneNumber: z.string().min(5, "Телефон рақами киритирилиши шарт!"),
-});
-
-const editUserSchema = z.object({
-  fullName: z.string().min(1, "Исм-шариф киритирилиши шарт!"),
-  phoneNumber: z.string().min(5, "Телефон рақами киритирилиши шарт!"),
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 });
 
 type CreateUserValues = z.infer<typeof createUserSchema>;
 type EditUserValues = z.infer<typeof editUserSchema>;
-
-<<<<<<< HEAD
-interface User {
-  id: string;
-  fullName: string;
-  phoneNumber: string;
-  password?: string;
-}
-=======
-import { User } from "./types";
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
 
 interface UserDialogsProps {
   isCreateOpen: boolean;
@@ -85,39 +63,26 @@ export function UserDialogs({
   onEditSubmit,
   onDeleteConfirm,
 }: UserDialogsProps) {
-<<<<<<< HEAD
-  // Формы
+  
+  // Инициализация форм
   const createForm = useForm<CreateUserValues>({
     resolver: zodResolver(createUserSchema),
     defaultValues: { fullName: "", phoneNumber: "", password: "" },
-=======
-  // Forms
-  const createForm = useForm<CreateUserValues>({
-    resolver: zodResolver(createUserSchema),
-    defaultValues: { fullName: "", phoneNumber: "" },
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
   });
 
   const editForm = useForm<EditUserValues>({
     resolver: zodResolver(editUserSchema),
-<<<<<<< HEAD
     defaultValues: { fullName: "", phoneNumber: "", password: "" },
-=======
-    defaultValues: { fullName: "", phoneNumber: "" },
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
   });
 
-  // Автозаполнение формы редактирования
+  // Автозаполнение формы редактирования при изменении выбранного пользователя
   React.useEffect(() => {
     if (selectedUser) {
       editForm.setValue("fullName", selectedUser.fullName);
       editForm.setValue("phoneNumber", selectedUser.phoneNumber);
-<<<<<<< HEAD
-      editForm.setValue("password", ""); // Начинаем с пустой строки (без изменений)
-=======
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+      editForm.setValue("password", ""); // Сбрасываем поле пароля для безопасного редактирования
     }
-  }, [selectedUser]);
+  }, [selectedUser, editForm]);
 
   const handleCreate = async (values: CreateUserValues) => {
     await onCreateSubmit(values);
@@ -136,17 +101,10 @@ export function UserDialogs({
         <DialogContent className="max-w-md rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-slate-900 uppercase tracking-wide">
-<<<<<<< HEAD
               Добавить нового участника
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-400">
               Создание учетной записи для нового покупателя в системе.
-=======
-              Янги аъзо қўшиш
-            </DialogTitle>
-            <DialogDescription className="text-xs text-slate-400">
-              Yangi харидор учун тизимда аккаунт яратиш.
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </DialogDescription>
           </DialogHeader>
 
@@ -156,11 +114,7 @@ export function UserDialogs({
           >
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-<<<<<<< HEAD
                 Имя и Фамилия
-=======
-                Исм-Шариф
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </label>
               <Input
                 type="text"
@@ -177,11 +131,7 @@ export function UserDialogs({
 
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-<<<<<<< HEAD
                 Номер телефона
-=======
-                Телефон Рақами
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </label>
               <Input
                 type="text"
@@ -193,7 +143,6 @@ export function UserDialogs({
                 <span className="text-[10px] text-rose-600 font-bold uppercase mt-1">
                   {createForm.formState.errors.phoneNumber.message}
                 </span>
-<<<<<<< HEAD
               )}
             </div>
 
@@ -211,8 +160,6 @@ export function UserDialogs({
                 <span className="text-[10px] text-rose-600 font-bold uppercase mt-1">
                   {createForm.formState.errors.password.message}
                 </span>
-=======
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               )}
             </div>
 
@@ -233,11 +180,7 @@ export function UserDialogs({
                 {submitting && (
                   <Loader2 className="h-3 w-3 animate-spin mr-1" />
                 )}
-<<<<<<< HEAD
                 Сохранить
-=======
-                Сақлаш
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </Button>
             </DialogFooter>
           </form>
@@ -249,19 +192,11 @@ export function UserDialogs({
         <DialogContent className="max-w-md rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-slate-900 uppercase tracking-wide">
-<<<<<<< HEAD
               Редактировать данные участника
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-400">
               Редактирование профиля пользователя. (Оставьте поле пустым, чтобы
               пароль остался без изменений)
-=======
-              Аъзо маълумотларини таҳрирлаш
-            </DialogTitle>
-            <DialogDescription className="text-xs text-slate-400">
-              Фойдаланувчи аккаунтни таҳрирлаш. (Парол ўзгаришсиз қолиши учун
-              бўш қолдиринг)
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </DialogDescription>
           </DialogHeader>
 
@@ -271,11 +206,7 @@ export function UserDialogs({
           >
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-<<<<<<< HEAD
                 Имя и Фамилия
-=======
-                Исм-Шариф
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </label>
               <Input
                 type="text"
@@ -291,11 +222,7 @@ export function UserDialogs({
 
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-<<<<<<< HEAD
                 Номер телефона
-=======
-                Телефон Рақами
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </label>
               <Input
                 type="text"
@@ -306,7 +233,6 @@ export function UserDialogs({
                 <span className="text-[10px] text-rose-600 font-bold uppercase mt-1">
                   {editForm.formState.errors.phoneNumber.message}
                 </span>
-<<<<<<< HEAD
               )}
             </div>
 
@@ -324,8 +250,6 @@ export function UserDialogs({
                 <span className="text-[10px] text-rose-600 font-bold uppercase mt-1">
                   {editForm.formState.errors.password.message}
                 </span>
-=======
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               )}
             </div>
 
@@ -346,11 +270,7 @@ export function UserDialogs({
                 {submitting && (
                   <Loader2 className="h-3 w-3 animate-spin mr-1" />
                 )}
-<<<<<<< HEAD
                 Обновить
-=======
-                Янгилаш
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
               </Button>
             </DialogFooter>
           </form>
@@ -362,11 +282,7 @@ export function UserDialogs({
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-rose-600 uppercase tracking-wide">
-<<<<<<< HEAD
               Подтвердите удаление участника
-=======
-              Аъзони ўчиришни тасдиқланг
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-400">
               Вы действительно хотите удалить данного пользователя?

@@ -29,17 +29,12 @@ const createSchema = z.object({
   longitude: z.string().optional(),
 });
 
-<<<<<<< HEAD
 const editSchema = z.object({
   founder: z.string().min(1, "Имя учредителя обязательно для заполнения!"),
   brandName: z.string().min(1, "Название бренда обязательно для заполнения!"),
   phoneNumber: z.string().min(5, "Номер телефона обязателен для заполнения!"),
   desc: z.string().min(1, "Описание бизнеса обязательно для заполнения!"),
-  password: z
-    .string()
-    .optional()
-    .or(z.string().min(6, "Пароль должен состоять минимум из 6 символов!"))
-    .or(z.literal("")),
+  password: z.string().optional().or(z.string().min(6, "Пароль должен состоять минимум из 6 символов!")).or(z.literal("")),
   email: z.string().email("Неверный адрес электронной почты!"),
   whatsappNumber: z.string().optional(),
   latitude: z.string().optional(),
@@ -48,26 +43,7 @@ const editSchema = z.object({
 
 type CreateValues = z.infer<typeof createSchema>;
 type EditValues = z.infer<typeof editSchema>;
-
-interface Seller {
-  id: string;
-  founder: string;
-  brandName: string;
-  phoneNumber: string;
-  logo?: string | null;
-  desc: string;
-  email: string;
-  password?: string; // Obyektdan parol kelishi uchun qo'shildi
-  whatsappNumber?: string | null;
-  latitude?: string | null;
-  longitude?: string | null;
-}
-=======
-type CreateValues = z.infer<typeof createSchema>
-type EditValues = z.infer<typeof editSchema>
-import { Seller } from "./types"
-
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+import { Seller } from "./types";
 
 interface SellerDialogsProps {
   isCreateOpen: boolean;

@@ -21,24 +21,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-<<<<<<< HEAD
-interface Seller {
-  id: string;
-  founder: string;
-  brandName: string;
-  phoneNumber: string;
-  logo?: string | null;
-  desc: string;
-  email: string;
-  password?: string; // <-- Parol kelayotgan bo'lsa mantiq ishlashi uchun qo'shildi
-  latitude?: string | null;
-  longitude?: string | null;
-  createdAt: string;
-}
-=======
-import { Seller } from "./types"
-
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+import { Seller } from "./types";
 
 interface SellersTableProps {
   sellers: Seller[];
@@ -51,6 +34,7 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
   const [selectedSeller, setSelectedSeller] = useState<Seller | null>(null);
   const [targetNumber, setTargetNumber] = useState("");
 
+  // FAQAT WHATSAPP TUGMASI BOSILGANDA ISHLAYDI
   const handleWhatsAppClick = (seller: Seller) => {
     setSelectedSeller(seller);
     const cleanNumber = seller.phoneNumber.replace(/\D/g, "");
@@ -58,18 +42,24 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
     setIsWhatsAppOpen(true);
   };
 
+  // MODAL ICHIDAGI "ОТПРАВИТЬ" TUGMASI BOSILGANDA ISHLAYDI
   const handleSendWhatsApp = () => {
     if (!selectedSeller || !targetNumber) return;
 
     const cleanWhatsAppNumber = targetNumber.replace(/\D/g, "");
 
-    // Yuboriladigan xabar matni (Ichiga Parol ham chiroyli qilib qo'shildi)
-    const messageText = `Здравствуйте, ${selectedSeller.founder}!\nИнформация о вашем магазине "${selectedSeller.brandName}":\n\nКонтакты: ${selectedSeller.phoneNumber}\nEmail: ${selectedSeller.email}\nАдрес: ${selectedSeller.latitude || "—"}, ${selectedSeller.longitude || "—"}\nВаш пароль: ${selectedSeller.password || "Не изменен"}`;
+    const geoAddress = 
+      selectedSeller.latitude && selectedSeller.longitude
+        ? `${selectedSeller.latitude}, ${selectedSeller.longitude}`
+        : "—";
+
+    const messageText = `Здравствуйте, ${selectedSeller.founder}!\nИнформация о вашем магазине "${selectedSeller.brandName}":\n\nКонтакты: ${selectedSeller.phoneNumber}\nEmail: ${selectedSeller.email}\nАдрес: ${geoAddress}\nВаш пароль: ${selectedSeller.password || "Не изменен"}`;
 
     const encodedMessage = encodeURIComponent(messageText);
     const whatsappUrl = `https://web.whatsapp.com/send?phone=${cleanWhatsAppNumber}&text=${encodedMessage}`;
 
-    window.open(whatsappUrl, "_blank");
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    
     setIsWhatsAppOpen(false);
     setSelectedSeller(null);
   };
@@ -152,29 +142,21 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
               </TableCell>
               <TableCell className="px-6 py-4 text-xs text-slate-500">
                 {seller.latitude && seller.longitude ? (
-<<<<<<< HEAD
-                  <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg w-fit font-mono text-[10px] text-slate-600">
-                    <MapPin className="h-3.5 w-3.5 text-indigo-500" />
-                    <span>
-                      {seller.latitude}, {seller.longitude}
-                    </span>
-                  </div>
-=======
                   <Link
                     href={`/sellers/map?lat=${seller.latitude}&lng=${seller.longitude}&name=${encodeURIComponent(seller.brandName)}`}
                     className="flex items-center gap-1 bg-indigo-50 border border-indigo-100 px-2 py-1 rounded-lg w-fit font-mono text-[10px] text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition-all cursor-pointer group"
-                    title="Харитада кўриш"
                   >
                     <MapPin className="h-3.5 w-3.5 text-indigo-500 group-hover:text-indigo-700 transition-colors" />
                     <span>{seller.latitude}, {seller.longitude}</span>
                   </Link>
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
                 ) : (
                   <span className="text-slate-300 font-bold">—</span>
                 )}
               </TableCell>
               <TableCell className="px-6 py-4 text-right">
                 <div className="flex items-center justify-end gap-2">
+                  
+                  {/* WHATSAPP TUGMASI - FAQAT MODALNI OCHADI */}
                   <Button
                     variant="outline"
                     size="sm"
@@ -185,6 +167,7 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
                     WhatsApp
                   </Button>
 
+                  {/* EDIT TUGMASI - WHATSAPPGA HECH NARSA YUBORMAYDI */}
                   <Button
                     variant="outline"
                     size="sm"
@@ -194,6 +177,7 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
                     <Edit2 className="h-3 w-3 mr-1 text-slate-400" />
                     Редактировать
                   </Button>
+                  
                   <Button
                     variant="ghost"
                     size="sm"

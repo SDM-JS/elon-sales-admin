@@ -23,15 +23,7 @@ const categorySchema = z.object({
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
 
-<<<<<<< HEAD
-interface Category {
-  id: string;
-  name: string;
-}
-=======
-import { Category } from "./types"
-
->>>>>>> 4737b9446fa7f0d132ceae4e984849930c3ca881
+import { Category } from "./types";
 
 interface CategoryDialogsProps {
   isCreateOpen: boolean;
