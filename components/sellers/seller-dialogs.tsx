@@ -151,7 +151,6 @@ export function SellerDialogs({
     // Tahrirlangandan so'ng ma'lumotlarni saqlab, WhatsApp modalini ochamiz
     setWhatsAppMessageData({
       ...values,
-      password: values.password || selectedSeller?.password || "Не изменен",
     });
     const cleanNumber = (values.whatsappNumber || values.phoneNumber).replace(
       /\D/g,
