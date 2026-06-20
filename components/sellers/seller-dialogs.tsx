@@ -82,7 +82,6 @@ export function SellerDialogs({
     brandName: string;
     phoneNumber: string;
     email: string;
-    password?: string;
     latitude?: string;
     longitude?: string;
   } | null>(null);
@@ -168,7 +167,7 @@ export function SellerDialogs({
     const cleanWhatsAppNumber = targetNumber.replace(/\D/g, "");
 
     // Yuboriladigan xabar matni (Faqat kerakli barcha ma'lumotlar jamlandi)
-    const messageText = `Здравствуйте, ${whatsAppMessageData.founder}!\nИнформация о вашем магазине "${whatsAppMessageData.brandName}":\n\nКонтакты: ${whatsAppMessageData.phoneNumber}\nEmail: ${whatsAppMessageData.email}\nПароль: ${whatsAppMessageData.password || "—"}\nАдрес: ${whatsAppMessageData.latitude || "—"}\nОриентир: ${whatsAppMessageData.longitude || "—"}`;
+    const messageText = `Здравствуйте, ${whatsAppMessageData.founder}!\nИнформация о вашем магазине "${whatsAppMessageData.brandName}":\n\nКонтакты: ${whatsAppMessageData.phoneNumber}\nEmail: ${whatsAppMessageData.email}\nАдрес: ${whatsAppMessageData.latitude || "—"}\nОриентир: ${whatsAppMessageData.longitude || "—"}`;
 
     const encodedMessage = encodeURIComponent(messageText);
     const whatsappUrl = `https://web.whatsapp.com/send?phone=${cleanWhatsAppNumber}&text=${encodedMessage}`;

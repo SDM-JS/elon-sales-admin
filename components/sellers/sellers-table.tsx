@@ -53,7 +53,7 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
         ? `${selectedSeller.latitude}, ${selectedSeller.longitude}`
         : "—";
 
-    const messageText = `Здравствуйте, ${selectedSeller.founder}!\nИнформация о вашем магазине "${selectedSeller.brandName}":\n\nКонтакты: ${selectedSeller.phoneNumber}\nEmail: ${selectedSeller.email}\nАдрес: ${geoAddress}\nВаш пароль: ${selectedSeller.password || "Не изменен"}`;
+    const messageText = `Здравствуйте, ${selectedSeller.founder}!\nИнформация о вашем магазине "${selectedSeller.brandName}":\n\nКонтакты: ${selectedSeller.phoneNumber}\nEmail: ${selectedSeller.email}\nАдрес: ${geoAddress}`;
 
     const encodedMessage = encodeURIComponent(messageText);
     const whatsappUrl = `https://web.whatsapp.com/send?phone=${cleanWhatsAppNumber}&text=${encodedMessage}`;
