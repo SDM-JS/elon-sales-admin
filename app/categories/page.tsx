@@ -14,13 +14,7 @@ import {
 } from "@/lib/api";
 import { CategoriesTable } from "@/components/categories/categories-table";
 import { CategoryDialogs } from "@/components/categories/category-dialogs";
-
-
-interface Category {
-  id: string;
-  name: string;
-  createdAt: string;
-}
+import { Category } from "@/components/categories/types";
 
 
 export default function CategoriesPage() {
