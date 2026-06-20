@@ -198,13 +198,11 @@ export default function CategoriesPage() {
           </p>
         </div>
       ) : (
-        <FolderOpen className="hidden" /> && (
-          <CategoriesTable
-            categories={filteredCategories}
-            onEdit={openEdit}
-            onDelete={openDelete}
-          />
-        )
+        <CategoriesTable
+          categories={filteredCategories}
+          onEdit={openEdit}
+          onDelete={openDelete}
+        />
       )}
 
       {/* Info Panel */}
