@@ -123,7 +123,6 @@ export function SellerDialogs({
       editForm.setValue("brandName", selectedSeller.brandName);
       editForm.setValue("phoneNumber", selectedSeller.phoneNumber);
       editForm.setValue("desc", selectedSeller.desc);
-      editForm.setValue("password", selectedSeller.password || "");
       editForm.setValue("email", selectedSeller.email);
       editForm.setValue("whatsappNumber", selectedSeller.whatsappNumber || "");
       editForm.setValue("latitude", selectedSeller.latitude || "");

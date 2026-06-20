@@ -130,7 +130,7 @@ export default function CategoriesPage() {
   };
 
   // Filter category list
-  const filteredCategories = categories.filter((cat) =>
+  const filteredCategories = categories.filter((cat: Category) =>
     cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
@@ -165,7 +165,7 @@ export default function CategoriesPage() {
             type="text"
             placeholder="Поиск категорий по названию..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             className="pl-10 rounded-xl border-slate-200"
           />
         </div>
