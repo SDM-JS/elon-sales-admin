@@ -22,9 +22,6 @@ interface Category {
   createdAt: string;
 }
 
-import { Category } from "@/components/categories/types"
-
-
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])
