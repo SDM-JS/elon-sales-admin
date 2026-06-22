@@ -14,16 +14,7 @@ import {
 } from "@/lib/api";
 import { CategoriesTable } from "@/components/categories/categories-table";
 import { CategoryDialogs } from "@/components/categories/category-dialogs";
-
-
-interface Category {
-  id: string;
-  name: string;
-  createdAt: string;
-}
-
-import { Category } from "@/components/categories/types"
-
+import { Category } from "@/components/categories/types";
 
 
 export default function CategoriesPage() {
@@ -139,7 +130,7 @@ export default function CategoriesPage() {
   };
 
   // Filter category list
-  const filteredCategories = categories.filter((cat) =>
+  const filteredCategories = categories.filter((cat: Category) =>
     cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
@@ -174,7 +165,7 @@ export default function CategoriesPage() {
             type="text"
             placeholder="Поиск категорий по названию..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             className="pl-10 rounded-xl border-slate-200"
           />
         </div>
@@ -201,13 +192,11 @@ export default function CategoriesPage() {
           </p>
         </div>
       ) : (
-        <FolderOpen className="hidden" /> && (
-          <CategoriesTable
-            categories={filteredCategories}
-            onEdit={openEdit}
-            onDelete={openDelete}
-          />
-        )
+        <CategoriesTable
+          categories={filteredCategories}
+          onEdit={openEdit}
+          onDelete={openDelete}
+        />
       )}
 
       {/* Info Panel */}
