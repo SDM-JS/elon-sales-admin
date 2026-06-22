@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://saledos-1.onrender.com/api"; // Replace with your actual API base URL
+const API_BASE_URL = "https://sale-backend-js8d.onrender.com/api"
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -43,7 +43,7 @@ export const updateCategory = async (id: string, name: string) => {
 
 export const deleteCategory = async (id: string) => {
   console.log(id)
-  const response = await api.delete("/categories",  {data:{ id:id }} )
+  const response = await api.delete("/categories", { data: { id: id } })
   return response.data
 }
 

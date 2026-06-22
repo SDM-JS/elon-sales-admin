@@ -63,7 +63,7 @@ export default function CategoriesPage() {
       console.error("Ошибка при создании категории:", err);
       toast.error(
         err.response?.data?.error ||
-          "Произошла ошибка при добавлении категории.",
+        "Произошла ошибка при добавлении категории.",
       );
     } finally {
       setSubmitting(false);
@@ -88,7 +88,7 @@ export default function CategoriesPage() {
       console.error("Ошибка при обновлении категории:", err);
       toast.error(
         err.response?.data?.error ||
-          "Произошла ошибка при редактировании категории.",
+        "Произошла ошибка при редактировании категории.",
       );
     } finally {
       setSubmitting(false);
