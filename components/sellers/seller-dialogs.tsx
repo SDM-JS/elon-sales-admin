@@ -123,7 +123,7 @@ export function SellerDialogs({
       editForm.setValue("brandName", selectedSeller.brandName);
       editForm.setValue("phoneNumber", selectedSeller.phoneNumber);
       editForm.setValue("desc", selectedSeller.desc);
-      editForm.setValue("password", selectedSeller.password || "");
+      editForm.setValue("password", "");
       editForm.setValue("email", selectedSeller.email);
       editForm.setValue("whatsappNumber", selectedSeller.whatsappNumber || "");
       editForm.setValue("latitude", selectedSeller.latitude || "");
@@ -152,7 +152,7 @@ export function SellerDialogs({
     // Tahrirlangandan so'ng ma'lumotlarni saqlab, WhatsApp modalini ochamiz
     setWhatsAppMessageData({
       ...values,
-      password: values.password || selectedSeller?.password || "Не изменен",
+      password: values.password || "Не изменен",
     });
     const cleanNumber = (values.whatsappNumber || values.phoneNumber).replace(
       /\D/g,
