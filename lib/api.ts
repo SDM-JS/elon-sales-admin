@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://saledos-1.onrender.com/api"; // Replace with your actual API base URL
+const API_BASE_URL = "http://192.168.123.44:3000/api"
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
