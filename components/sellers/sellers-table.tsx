@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Edit2, Trash2, Phone, Mail, MapPin, Send } from "lucide-react";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,6 +41,10 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
     const cleanNumber = seller.phoneNumber.replace(/\D/g, "");
     setTargetNumber(cleanNumber);
     setIsWhatsAppOpen(true);
+    posthog.capture("seller_whatsapp_opened", {
+      seller_id: seller.id,
+      brand_name: seller.brandName,
+    });
   };
 
   // MODAL ICHIDAGI "ОТПРАВИТЬ" TUGMASI BOSILGANDA ISHLAYDI

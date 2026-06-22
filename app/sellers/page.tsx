@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Store, Plus, Search, Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -78,6 +79,11 @@ export default function SellersPage() {
       setSubmitting(true);
       await createSeller(formData);
 
+      posthog.capture("seller_created", {
+        brand_name: values.brandName,
+        has_whatsapp: !!values.whatsappNumber,
+        has_location: !!(values.latitude && values.longitude),
+      });
       toast.success("Продавец успешно добавлен!");
       setIsCreateOpen(false);
       fetchSellers();
@@ -123,6 +129,10 @@ export default function SellersPage() {
     try {
       setSubmitting(true);
       await updateSeller(selectedSeller.id, formData);
+      posthog.capture("seller_updated", {
+        seller_id: selectedSeller.id,
+        brand_name: values.brandName,
+      });
       toast.success("Данные продавца успешно обновлены!");
       setIsEditOpen(false);
       fetchSellers();
@@ -146,6 +156,10 @@ export default function SellersPage() {
     try {
       setSubmitting(true);
       await deleteSeller(selectedSeller.id);
+      posthog.capture("seller_deleted", {
+        seller_id: selectedSeller.id,
+        brand_name: selectedSeller.brandName,
+      });
       toast.success("Продавец успешно удален!");
       setIsDeleteOpen(false);
       setSelectedSeller(null);

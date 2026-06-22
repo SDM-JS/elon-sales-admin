@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react"
 import { Store, Tag, FolderOpen, Users, ArrowUpRight, Activity, Loader2, RefreshCw, CheckCircle2, XCircle } from "lucide-react"
 import Link from "next/link"
+import posthog from "posthog-js"
 
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -140,7 +141,10 @@ export default function Home() {
           <Button
             variant="outline"
             size="sm"
-            onClick={fetchDashboardData}
+            onClick={() => {
+              posthog.capture("dashboard_refreshed");
+              fetchDashboardData();
+            }}
             disabled={loading}
             className="text-[10px] font-bold uppercase tracking-wider border-slate-200 hover:bg-slate-50"
           >

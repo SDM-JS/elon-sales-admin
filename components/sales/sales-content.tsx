@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import posthog from "posthog-js";
 
 import {
   getSales,
@@ -89,6 +90,14 @@ export function SalesPageContent() {
     try {
       setSubmitting(true);
       await createSale(values.sellerId, formData);
+      posthog.capture("sale_created", {
+        product_name: values.productName,
+        seller_id: values.sellerId,
+        category_id: values.categoryId,
+        last_price: values.lastPrice,
+        sale_price: values.salePrice,
+        discount_pct: Math.round(((values.lastPrice - values.salePrice) / values.lastPrice) * 100),
+      });
       toast.success("Товар успешно добавлен!");
       setIsCreateOpen(false);
       fetchData();
@@ -120,6 +129,12 @@ export function SalesPageContent() {
     try {
       setSubmitting(true);
       await updateSale(selectedSale.id, formData);
+      posthog.capture("sale_updated", {
+        sale_id: selectedSale.id,
+        product_name: values.productName,
+        seller_id: values.sellerId,
+        sale_price: values.salePrice,
+      });
       toast.success("Данные товара успешно обновлены!");
       setIsEditOpen(false);
       setSelectedSale(null);
@@ -139,6 +154,11 @@ export function SalesPageContent() {
     try {
       setSubmitting(true);
       await deleteSale(selectedSale.id);
+      posthog.capture("sale_deleted", {
+        sale_id: selectedSale.id,
+        product_name: selectedSale.productName,
+        seller_id: selectedSale.sellerId,
+      });
       toast.success("Товар успешно удален!");
       setIsDeleteOpen(false);
       setSelectedSale(null);
