@@ -22,8 +22,8 @@ interface SellerFormValues {
   brandName: string;
   founder: string;
   phoneNumber: string;
-  email: string;
-  desc: string;
+  email?: string;
+  desc?: string;
   password?: string;
   latitude?: string;
   longitude?: string;
@@ -66,8 +66,8 @@ export default function SellersPage() {
     formData.append("brandName", values.brandName);
     formData.append("founder", values.founder);
     formData.append("phoneNumber", values.phoneNumber);
-    formData.append("email", values.email);
-    formData.append("desc", values.desc);
+    formData.append("email", values.email || "");
+    formData.append("desc", values.desc || "");
     if (values.password) formData.append("password", values.password);
     if (values.latitude) formData.append("latitude", values.latitude);
     if (values.longitude) formData.append("longitude", values.longitude);
@@ -117,8 +117,8 @@ export default function SellersPage() {
     formData.append("brandName", values.brandName);
     formData.append("founder", values.founder);
     formData.append("phoneNumber", values.phoneNumber);
-    formData.append("email", values.email);
-    formData.append("desc", values.desc);
+    formData.append("email", values.email || "");
+    formData.append("desc", values.desc || "");
     if (values.password) formData.append("password", values.password);
     formData.append("latitude", values.latitude || "");
     formData.append("longitude", values.longitude || "");

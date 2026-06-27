@@ -21,9 +21,9 @@ const createSchema = z.object({
   founder: z.string().min(1, "Имя учредителя обязательно для заполнения!"),
   brandName: z.string().min(1, "Название бренда обязательно для заполнения!"),
   phoneNumber: z.string().min(5, "Номер телефона обязателен для заполнения!"),
-  desc: z.string().min(1, "Описание бизнеса обязательно для заполнения!"),
+  desc: z.string().optional().or(z.literal("")),
   password: z.string().min(6, "Пароль должен состоять минимум из 6 символов!"),
-  email: z.string().email("Неверный адрес электронной почты!"),
+  email: z.string().email("Неверный адрес электронной почты!").optional().or(z.literal("")),
   whatsappNumber: z.string().optional(),
   latitude: z.string().optional(),
   longitude: z.string().optional(),
@@ -33,9 +33,9 @@ const editSchema = z.object({
   founder: z.string().min(1, "Имя учредителя обязательно для заполнения!"),
   brandName: z.string().min(1, "Название бренда обязательно для заполнения!"),
   phoneNumber: z.string().min(5, "Номер телефона обязателен для заполнения!"),
-  desc: z.string().min(1, "Описание бизнеса обязательно для заполнения!"),
+  desc: z.string().optional().or(z.literal("")),
   password: z.string().optional().or(z.string().min(6, "Пароль должен состоять минимум из 6 символов!")).or(z.literal("")),
-  email: z.string().email("Неверный адрес электронной почты!"),
+  email: z.string().email("Неверный адрес электронной почты!").optional().or(z.literal("")),
   whatsappNumber: z.string().optional(),
   latitude: z.string().optional(),
   longitude: z.string().optional(),
@@ -136,7 +136,10 @@ export function SellerDialogs({
   const handleCreateFormSubmit = async (values: CreateValues) => {
     await onCreateSubmit(values, logoFile);
     // Yaratilgandan so'ng ma'lumotlarni saqlab, WhatsApp modalini ochamiz
-    setWhatsAppMessageData(values);
+    setWhatsAppMessageData({
+      ...values,
+      email: values.email || "",
+    });
     const cleanNumber = (values.whatsappNumber || values.phoneNumber).replace(
       /\D/g,
       "",
@@ -152,6 +155,7 @@ export function SellerDialogs({
     // Tahrirlangandan so'ng ma'lumotlarni saqlab, WhatsApp modalini ochamiz
     setWhatsAppMessageData({
       ...values,
+      email: values.email || "",
       password: values.password || "Не изменен",
     });
     const cleanNumber = (values.whatsappNumber || values.phoneNumber).replace(
