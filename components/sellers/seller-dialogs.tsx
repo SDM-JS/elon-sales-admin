@@ -385,6 +385,11 @@ export function SellerDialogs({
                   {...editForm.register("brandName")}
                   className="rounded-xl border-slate-200"
                 />
+                {editForm.formState.errors.brandName && (
+                  <span className="text-[10px] text-red-500 font-medium">
+                    {editForm.formState.errors.brandName.message}
+                  </span>
+                )}
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400">
@@ -394,6 +399,11 @@ export function SellerDialogs({
                   {...editForm.register("founder")}
                   className="rounded-xl border-slate-200"
                 />
+                {editForm.formState.errors.founder && (
+                  <span className="text-[10px] text-red-500 font-medium">
+                    {editForm.formState.errors.founder.message}
+                  </span>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -405,6 +415,11 @@ export function SellerDialogs({
                   {...editForm.register("phoneNumber")}
                   className="rounded-xl border-slate-200"
                 />
+                {editForm.formState.errors.phoneNumber && (
+                  <span className="text-[10px] text-red-500 font-medium">
+                    {editForm.formState.errors.phoneNumber.message}
+                  </span>
+                )}
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400">
@@ -414,6 +429,11 @@ export function SellerDialogs({
                   {...editForm.register("email")}
                   className="rounded-xl border-slate-200"
                 />
+                {editForm.formState.errors.email && (
+                  <span className="text-[10px] text-red-500 font-medium">
+                    {editForm.formState.errors.email.message}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -475,6 +495,11 @@ export function SellerDialogs({
                   className="rounded-xl border-slate-200"
                   placeholder="Оставить без изменений"
                 />
+                {editForm.formState.errors.password && (
+                  <span className="text-[10px] text-red-500 font-medium">
+                    {editForm.formState.errors.password.message}
+                  </span>
+                )}
               </div>
             </div>
             <div className="flex flex-col gap-1">
@@ -486,6 +511,11 @@ export function SellerDialogs({
                 rows={2}
                 className="w-full border border-slate-200 px-3 py-2 text-xs rounded-xl"
               />
+              {editForm.formState.errors.desc && (
+                <span className="text-[10px] text-red-500 font-medium">
+                  {editForm.formState.errors.desc.message}
+                </span>
+              )}
             </div>
 
             <DialogFooter className="border-t pt-4 flex gap-2 justify-end">
