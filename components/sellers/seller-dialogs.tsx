@@ -18,8 +18,8 @@ import { Input } from "@/components/ui/input";
 
 // Zod sxemalari rus tiliga o'tkazildi
 const createSchema = z.object({
-  founder: z.string().min(1, "Имя учредителя обязательно для заполнения!"),
-  brandName: z.string().min(1, "Название бренда обязательно для заполнения!"),
+  founder: z.string().optional().or(z.literal("")),
+  brandName: z.string().optional().or(z.literal("")),
   phoneNumber: z.string().min(5, "Номер телефона обязателен для заполнения!"),
   desc: z.string().optional().or(z.literal("")),
   password: z.string().min(6, "Пароль должен состоять минимум из 6 символов!"),
@@ -30,8 +30,8 @@ const createSchema = z.object({
 });
 
 const editSchema = z.object({
-  founder: z.string().min(1, "Имя учредителя обязательно для заполнения!"),
-  brandName: z.string().min(1, "Название бренда обязательно для заполнения!"),
+  founder: z.string().optional().or(z.literal("")),
+  brandName: z.string().optional().or(z.literal("")),
   phoneNumber: z.string().min(5, "Номер телефона обязателен для заполнения!"),
   desc: z.string().optional().or(z.literal("")),
   password: z.string().optional().or(z.string().min(6, "Пароль должен состоять минимум из 6 символов!")).or(z.literal("")),
@@ -78,10 +78,10 @@ export function SellerDialogs({
   const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
   const [targetNumber, setTargetNumber] = useState("");
   const [whatsAppMessageData, setWhatsAppMessageData] = useState<{
-    founder: string;
-    brandName: string;
+    founder?: string;
+    brandName?: string;
     phoneNumber: string;
-    email: string;
+    email?: string;
     password?: string;
     latitude?: string;
     longitude?: string;
@@ -119,12 +119,12 @@ export function SellerDialogs({
 
   useEffect(() => {
     if (selectedSeller) {
-      editForm.setValue("founder", selectedSeller.founder);
-      editForm.setValue("brandName", selectedSeller.brandName);
+      editForm.setValue("founder", selectedSeller.founder || "");
+      editForm.setValue("brandName", selectedSeller.brandName || "");
       editForm.setValue("phoneNumber", selectedSeller.phoneNumber);
-      editForm.setValue("desc", selectedSeller.desc);
+      editForm.setValue("desc", selectedSeller.desc || "");
       editForm.setValue("password", "");
-      editForm.setValue("email", selectedSeller.email);
+      editForm.setValue("email", selectedSeller.email || "");
       editForm.setValue("whatsappNumber", selectedSeller.whatsappNumber || "");
       editForm.setValue("latitude", selectedSeller.latitude || "");
       editForm.setValue("longitude", selectedSeller.longitude || "");
@@ -174,7 +174,11 @@ export function SellerDialogs({
     const cleanWhatsAppNumber = targetNumber.replace(/\D/g, "");
 
     // Yuboriladigan xabar matni (Faqat kerakli barcha ma'lumotlar jamlandi)
-    const messageText = `Здравствуйте, ${whatsAppMessageData.founder}!\nИнформация о вашем магазине "${whatsAppMessageData.brandName}":\n\nКонтакты: ${whatsAppMessageData.phoneNumber}\nEmail: ${whatsAppMessageData.email}\nПароль: ${whatsAppMessageData.password || "—"}\nАдрес: ${whatsAppMessageData.latitude || "—"}\nОриентир: ${whatsAppMessageData.longitude || "—"}`;
+    const greeting = whatsAppMessageData.founder
+      ? `Здравствуйте, ${whatsAppMessageData.founder}!`
+      : "Здравствуйте!";
+    const brandName = whatsAppMessageData.brandName || "—";
+    const messageText = `${greeting}\nИнформация о вашем магазине "${brandName}":\n\nКонтакты: ${whatsAppMessageData.phoneNumber}\nEmail: ${whatsAppMessageData.email || "—"}\nПароль: ${whatsAppMessageData.password || "—"}\nАдрес: ${whatsAppMessageData.latitude || "—"}\nОриентир: ${whatsAppMessageData.longitude || "—"}`;
 
     const encodedMessage = encodeURIComponent(messageText);
     const whatsappUrl = `https://web.whatsapp.com/send?phone=${cleanWhatsAppNumber}&text=${encodedMessage}`;
@@ -201,7 +205,7 @@ export function SellerDialogs({
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400">
-                  Бренд
+                  Бренд (Необязательно)
                 </label>
                 <Input
                   {...createForm.register("brandName")}
@@ -215,7 +219,7 @@ export function SellerDialogs({
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400">
-                  Учредитель
+                  Учредитель (Необязательно)
                 </label>
                 <Input
                   {...createForm.register("founder")}
@@ -245,7 +249,7 @@ export function SellerDialogs({
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400">
-                  Почта
+                  Почта (Необязательно)
                 </label>
                 <Input
                   {...createForm.register("email")}
@@ -330,7 +334,7 @@ export function SellerDialogs({
 
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold uppercase text-slate-400">
-                Описание бизнеса
+                Описание бизнеса (Необязательно)
               </label>
               <textarea
                 {...createForm.register("desc")}
@@ -383,7 +387,7 @@ export function SellerDialogs({
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400">
-                  Бренд
+                  Бренд (Необязательно)
                 </label>
                 <Input
                   {...editForm.register("brandName")}
@@ -397,7 +401,7 @@ export function SellerDialogs({
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400">
-                  Учредитель
+                  Учредитель (Необязательно)
                 </label>
                 <Input
                   {...editForm.register("founder")}
@@ -427,7 +431,7 @@ export function SellerDialogs({
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold uppercase text-slate-400">
-                  Почта
+                  Почта (Необязательно)
                 </label>
                 <Input
                   {...editForm.register("email")}
@@ -508,7 +512,7 @@ export function SellerDialogs({
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold uppercase text-slate-400">
-                Описание бизнеса
+                Описание бизнеса (Необязательно)
               </label>
               <textarea
                 {...editForm.register("desc")}
@@ -595,7 +599,7 @@ export function SellerDialogs({
             <p className="text-xs text-slate-500">
               Продавец{" "}
               <span className="font-bold text-slate-700">
-                "{whatsAppMessageData?.brandName}"
+                &quot;{whatsAppMessageData?.brandName || "—"}&quot;
               </span>{" "}
               успешно сохранен. Подтвердите номер телефона для отправки пароля и
               данных магазина.

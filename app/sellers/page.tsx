@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Store, Plus, Search, Loader2 } from "lucide-react";
-import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -19,8 +18,8 @@ import { Seller } from "@/components/sellers/types";
 
 // Типизация для значений формы продавца
 interface SellerFormValues {
-  brandName: string;
-  founder: string;
+  brandName?: string;
+  founder?: string;
   phoneNumber: string;
   email?: string;
   desc?: string;
@@ -29,6 +28,15 @@ interface SellerFormValues {
   longitude?: string;
   whatsappNumber?: string;
 }
+
+const getApiErrorMessage = (err: unknown, fallback: string) => {
+  if (typeof err !== "object" || err === null || !("response" in err)) {
+    return fallback;
+  }
+
+  const response = (err as { response?: { data?: { error?: unknown } } }).response;
+  return typeof response?.data?.error === "string" ? response.data.error : fallback;
+};
 
 export default function SellersPage() {
   const [sellers, setSellers] = useState<Seller[]>([]);
@@ -63,8 +71,8 @@ export default function SellersPage() {
   // Handle Create Submit
   const onCreateSubmit = async (values: SellerFormValues, logoFile: File | null) => {
     const formData = new FormData();
-    formData.append("brandName", values.brandName);
-    formData.append("founder", values.founder);
+    formData.append("brandName", values.brandName || "");
+    formData.append("founder", values.founder || "");
     formData.append("phoneNumber", values.phoneNumber);
     formData.append("email", values.email || "");
     formData.append("desc", values.desc || "");
@@ -79,11 +87,6 @@ export default function SellersPage() {
       setSubmitting(true);
       await createSeller(formData);
 
-      posthog.capture("seller_created", {
-        brand_name: values.brandName,
-        has_whatsapp: !!values.whatsappNumber,
-        has_location: !!(values.latitude && values.longitude),
-      });
       toast.success("Продавец успешно добавлен!");
       setIsCreateOpen(false);
       fetchSellers();
@@ -93,17 +96,21 @@ export default function SellersPage() {
       if (targetWhatsAppNumber) {
         const cleanWhatsAppNumber = targetWhatsAppNumber.replace(/\D/g, "");
 
-        const messageText = `Здравствуйте, ${values.founder}!\nИнформация о вашем созданном магазине "${values.brandName}":\n\nКонтакты: ${values.phoneNumber}\nEmail: ${values.email}\nПароль: ${values.password || "—"}\nАдрес: ${values.latitude || "—"}\nОриентир: ${values.longitude || "—"}`;
+        const greeting = values.founder
+          ? `Здравствуйте, ${values.founder}!`
+          : "Здравствуйте!";
+        const brandName = values.brandName || "—";
+        const messageText = `${greeting}\nИнформация о вашем созданном магазине "${brandName}":\n\nКонтакты: ${values.phoneNumber}\nEmail: ${values.email || "—"}\nПароль: ${values.password || "—"}\nАдрес: ${values.latitude || "—"}\nОриентир: ${values.longitude || "—"}`;
 
         const encodedMessage = encodeURIComponent(messageText);
         const whatsappUrl = `https://web.whatsapp.com/send?phone=${cleanWhatsAppNumber}&text=${encodedMessage}`;
 
         window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Ошибка при создании продавца:", err);
       toast.error(
-        err.response?.data?.error || "Произошла ошибка при добавлении продавца."
+        getApiErrorMessage(err, "Произошла ошибка при добавлении продавца.")
       );
     } finally {
       setSubmitting(false);
@@ -114,8 +121,8 @@ export default function SellersPage() {
   const onEditSubmit = async (values: SellerFormValues, logoFile: File | null) => {
     if (!selectedSeller) return;
     const formData = new FormData();
-    formData.append("brandName", values.brandName);
-    formData.append("founder", values.founder);
+    formData.append("brandName", values.brandName || "");
+    formData.append("founder", values.founder || "");
     formData.append("phoneNumber", values.phoneNumber);
     formData.append("email", values.email || "");
     formData.append("desc", values.desc || "");
@@ -129,10 +136,6 @@ export default function SellersPage() {
     try {
       setSubmitting(true);
       await updateSeller(selectedSeller.id, formData);
-      posthog.capture("seller_updated", {
-        seller_id: selectedSeller.id,
-        brand_name: values.brandName,
-      });
       toast.success("Данные продавца успешно обновлены!");
       setIsEditOpen(false);
       fetchSellers();
@@ -140,10 +143,10 @@ export default function SellersPage() {
       // ВАТСАПГА ЮБОРИШ КИСМИ ОЛИБ ТАШЛАНДИ (РЕДАКТИРОВАНИЕ)
 
       setSelectedSeller(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Ошибка при обновлении продавца:", err);
       toast.error(
-        err.response?.data?.error || "Произошла ошибка при редактировании."
+        getApiErrorMessage(err, "Произошла ошибка при редактировании.")
       );
     } finally {
       setSubmitting(false);
@@ -156,18 +159,14 @@ export default function SellersPage() {
     try {
       setSubmitting(true);
       await deleteSeller(selectedSeller.id);
-      posthog.capture("seller_deleted", {
-        seller_id: selectedSeller.id,
-        brand_name: selectedSeller.brandName,
-      });
       toast.success("Продавец успешно удален!");
       setIsDeleteOpen(false);
       setSelectedSeller(null);
       fetchSellers();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Ошибка при удалении продавца:", err);
       toast.error(
-        err.response?.data?.error || "Произошла ошибка при удалении продавца."
+        getApiErrorMessage(err, "Произошла ошибка при удалении продавца.")
       );
     } finally {
       setSubmitting(false);
@@ -177,8 +176,8 @@ export default function SellersPage() {
   // Фильтрация продавцов
   const filteredSellers = sellers.filter(
     (seller) =>
-      seller.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      seller.founder.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (seller.brandName || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (seller.founder || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       seller.phoneNumber.includes(searchQuery)
   );
 
