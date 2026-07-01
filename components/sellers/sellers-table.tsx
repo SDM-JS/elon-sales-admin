@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Edit2, Trash2, Phone, Mail, MapPin, Send } from "lucide-react";
-import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -41,10 +40,6 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
     const cleanNumber = seller.phoneNumber.replace(/\D/g, "");
     setTargetNumber(cleanNumber);
     setIsWhatsAppOpen(true);
-    posthog.capture("seller_whatsapp_opened", {
-      seller_id: seller.id,
-      brand_name: seller.brandName,
-    });
   };
 
   // MODAL ICHIDAGI "ОТПРАВИТЬ" TUGMASI BOSILGANDA ISHLAYDI
@@ -58,7 +53,11 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
         ? `${selectedSeller.latitude}, ${selectedSeller.longitude}`
         : "—";
 
-    const messageText = `Здравствуйте, ${selectedSeller.founder}!\nИнформация о вашем магазине "${selectedSeller.brandName}":\n\nКонтакты: ${selectedSeller.phoneNumber}\nEmail: ${selectedSeller.email}\nАдрес: ${geoAddress}`;
+    const greeting = selectedSeller.founder
+      ? `Здравствуйте, ${selectedSeller.founder}!`
+      : "Здравствуйте!";
+    const brandName = selectedSeller.brandName || "—";
+    const messageText = `${greeting}\nИнформация о вашем магазине "${brandName}":\n\nКонтакты: ${selectedSeller.phoneNumber}\nEmail: ${selectedSeller.email || "—"}\nАдрес: ${geoAddress}`;
 
     const encodedMessage = encodeURIComponent(messageText);
     const whatsappUrl = `https://web.whatsapp.com/send?phone=${cleanWhatsAppNumber}&text=${encodedMessage}`;
@@ -107,7 +106,7 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
                 {seller.logo ? (
                   <img
                     src={seller.logo}
-                    alt={seller.brandName}
+                    alt={seller.brandName || "Логотип продавца"}
                     className="h-10 w-10 object-cover border border-slate-100 rounded-xl shadow-inner"
                     onError={(e) => {
                       (e.target as HTMLElement).style.display = "none";
@@ -124,11 +123,11 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
                   href={`/sales?sellerId=${seller.id}`}
                   className="font-bold text-slate-800 hover:text-indigo-650 hover:underline transition-colors uppercase tracking-wide text-xs cursor-pointer"
                 >
-                  {seller.brandName}
+                  {seller.brandName || <span className="text-slate-300 font-bold">—</span>}
                 </Link>
               </TableCell>
               <TableCell className="px-6 py-4 font-semibold text-slate-700 text-xs uppercase">
-                {seller.founder}
+                {seller.founder || <span className="text-slate-300 font-bold">—</span>}
               </TableCell>
               <TableCell className="px-6 py-4 text-xs text-slate-500">
                 <div className="space-y-1">
@@ -138,17 +137,17 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
                   </div>
                   <div className="flex items-center gap-1.5 font-mono text-[10px] text-slate-500 lowercase">
                     <Mail className="h-3.5 w-3.5 text-slate-400" />
-                    <span>{seller.email}</span>
+                    <span>{seller.email || "—"}</span>
                   </div>
                 </div>
               </TableCell>
               <TableCell className="px-6 py-4 text-xs text-slate-500 max-w-xs truncate font-medium">
-                {seller.desc}
+                {seller.desc || <span className="text-slate-300 font-bold">—</span>}
               </TableCell>
               <TableCell className="px-6 py-4 text-xs text-slate-500">
                 {seller.latitude && seller.longitude ? (
                   <Link
-                    href={`/sellers/map?lat=${seller.latitude}&lng=${seller.longitude}&name=${encodeURIComponent(seller.brandName)}`}
+                    href={`/sellers/map?lat=${seller.latitude}&lng=${seller.longitude}&name=${encodeURIComponent(seller.brandName || "")}`}
                     className="flex items-center gap-1 bg-indigo-50 border border-indigo-100 px-2 py-1 rounded-lg w-fit font-mono text-[10px] text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition-all cursor-pointer group"
                   >
                     <MapPin className="h-3.5 w-3.5 text-indigo-500 group-hover:text-indigo-700 transition-colors" />
@@ -212,7 +211,7 @@ export function SellersTable({ sellers, onEdit, onDelete }: SellersTableProps) {
             <p className="text-xs text-slate-500">
               Вы можете отправить данные продавца{" "}
               <span className="font-bold text-slate-700">
-                "{selectedSeller?.brandName}"
+                &quot;{selectedSeller?.brandName || "—"}&quot;
               </span>{" "}
               на основной номер телефона или указать другой.
             </p>
