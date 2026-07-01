@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+<<<<<<< HEAD
   turbopack: {
     root: __dirname,
   },
@@ -20,6 +21,8 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+=======
+>>>>>>> b538eb3dcfd2330639bce82ed1cc4940d5f95cf2
   skipTrailingSlashRedirect: true,
 };
 

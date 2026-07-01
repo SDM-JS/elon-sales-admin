@@ -91,11 +91,10 @@ export function AppSidebar() {
                       asChild
                       isActive={isActive}
                       tooltip={item.title}
-                      className={`flex items-center gap-3 px-3 py-2.5 transition-all duration-200 rounded-xl ${
-                        isActive
+                      className={`flex items-center gap-3 px-3 py-2.5 transition-all duration-200 rounded-xl ${isActive
                           ? "bg-indigo-50 text-indigo-600 font-bold"
                           : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                      }`}
+                        }`}
                     >
                       <Link
                         href={item.url}

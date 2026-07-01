@@ -5,7 +5,6 @@ import { Users, Plus, Search, ShieldAlert, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import posthog from "posthog-js";
 
 import { getUsers, createUser, updateUser, deleteUser } from "@/lib/api";
 import { UsersTable } from "@/components/users/users-table";
@@ -54,10 +53,6 @@ export default function UsersPage() {
       setSubmitting(true);
       const newUser = await createUser(values);
       console.log("Create User API Response:", newUser);
-      posthog.capture("user_created", {
-        full_name: values.fullName,
-        phone_number: values.phoneNumber,
-      });
       toast.success("Пользователь успешно добавлен!");
       setIsCreateOpen(false);
       fetchUsers();
@@ -86,10 +81,6 @@ export default function UsersPage() {
       setSubmitting(true);
       const updated = await updateUser(selectedUser.id, values);
       console.log("Update User API Response:", updated);
-      posthog.capture("user_updated", {
-        user_id: selectedUser.id,
-        full_name: values.fullName,
-      });
       toast.success("Данные пользователя успешно обновлены!");
       setIsEditOpen(false);
       setSelectedUser(null);
@@ -112,10 +103,6 @@ export default function UsersPage() {
       setSubmitting(true);
       const deleted = await deleteUser(selectedUser.id);
       console.log("Delete User API Response:", deleted);
-      posthog.capture("user_deleted", {
-        user_id: selectedUser.id,
-        full_name: selectedUser.fullName,
-      });
       toast.success("Пользователь успешно удален из системы!");
       setIsDeleteOpen(false);
       setSelectedUser(null);

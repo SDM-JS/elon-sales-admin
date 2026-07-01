@@ -29,8 +29,8 @@ import { NativeSelect } from "@/components/ui/native-select";
 const salesSchema = z
   .object({
     productName: z.string().min(1, "Название товара обязательно к заполнению!"),
-    lastPrice: z.coerce.number().positive("Исходная цена должна быть больше нуля!"),
-    salePrice: z.coerce.number().positive("Цена со скидкой должна быть больше нуля!"),
+    lastPrice: z.number().positive("Исходная цена должна быть больше нуля!"),
+    salePrice: z.number().positive("Цена со скидкой должна быть больше нуля!"),
     desc: z.string().optional().or(z.literal("")),
     categoryId: z.string().min(1, "Выберите категорию!"),
     sellerId: z.string().min(1, "Выберите продавца!"),
@@ -167,7 +167,7 @@ export function SalesDialogs({
                 </label>
                 <Input
                   type="number"
-                  {...register("lastPrice")}
+                  {...register("lastPrice", { valueAsNumber: true })}
                   className="rounded-xl border-slate-200"
                 />
                 {errors.lastPrice && (
@@ -180,7 +180,7 @@ export function SalesDialogs({
                 </label>
                 <Input
                   type="number"
-                  {...register("salePrice")}
+                  {...register("salePrice", { valueAsNumber: true })}
                   className="rounded-xl border-slate-200"
                 />
                 {errors.salePrice && (
@@ -310,7 +310,7 @@ export function SalesDialogs({
                 </label>
                 <Input
                   type="number"
-                  {...register("lastPrice")}
+                  {...register("lastPrice", { valueAsNumber: true })}
                   className="rounded-xl border-slate-200"
                 />
                 {errors.lastPrice && (
@@ -323,7 +323,7 @@ export function SalesDialogs({
                 </label>
                 <Input
                   type="number"
-                  {...register("salePrice")}
+                  {...register("salePrice", { valueAsNumber: true })}
                   className="rounded-xl border-slate-200"
                 />
                 {errors.salePrice && (
