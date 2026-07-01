@@ -137,3 +137,8 @@ export const deleteCarusel = async (id: string) => {
   const response = await api.delete(`/carusel/${id}`)
   return response.data
 }
+
+export const getStats = async () => {
+  const response = await api.get("/carusel/stat")
+  return response.data
+}
