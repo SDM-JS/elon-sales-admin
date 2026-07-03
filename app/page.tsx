@@ -4,7 +4,7 @@ import { Store, Tag, FolderOpen, Users, ArrowUpRight, Activity, Loader2, Refresh
 import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { getSellers, getSales, getCategories, getUsers } from "@/lib/api"
+import { getStats } from "@/lib/api"
 
 interface DashboardStats {
   sellers: number | null
@@ -12,7 +12,6 @@ interface DashboardStats {
   categories: number | null
   users: number | null
 }
-
 interface ApiStatus {
   connected: boolean | null
   responseTime: number | null
@@ -34,29 +33,20 @@ export default function Home() {
   })
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  // Функция получения данных с мемоизацией
   const fetchDashboardData = useCallback(async () => {
     setLoading(true)
     setApiStatus(prev => ({ ...prev, loading: true }))
     const start = performance.now()
-
     try {
-      const [sellersData, salesData, categoriesData, usersData] = await Promise.all([
-        getSellers(),
-        getSales(),
-        getCategories(),
-        getUsers(),
-      ])
-
+      const data = await getStats()
       const elapsed = Math.round(performance.now() - start)
 
       setStats({
-        sellers: Array.isArray(sellersData) ? sellersData.length : (sellersData?.data?.length ?? 0),
-        sales: Array.isArray(salesData) ? salesData.length : (salesData?.data?.length ?? 0),
-        categories: Array.isArray(categoriesData) ? categoriesData.length : (categoriesData?.data?.length ?? 0),
-        users: Array.isArray(usersData) ? usersData.length : (usersData?.data?.length ?? 0),
+        sellers: data.sellers ?? 0,
+        sales: data.sales ?? 0,
+        categories: data.categories ?? 0,
+        users: data.users ?? 0,
       })
-
       setApiStatus({ connected: true, responseTime: elapsed, loading: false })
       setLastUpdated(new Date())
     } catch (error) {
@@ -148,7 +138,6 @@ export default function Home() {
           </Button>
         </div>
       </div>
-
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (
           <Card
@@ -165,7 +154,6 @@ export default function Home() {
                 <stat.icon className="h-4.5 w-4.5" />
               </div>
             </CardHeader>
-
             <CardContent className="mt-4 flex flex-col gap-2">
               <div className="flex items-baseline gap-2">
                 {loading ? (
@@ -184,7 +172,6 @@ export default function Home() {
                 {stat.description}
               </p>
             </CardContent>
-
             <CardFooter className="mt-auto border-t border-slate-50 pt-4 flex items-center justify-between bg-slate-50/30">
               <Button
                 variant="link"
@@ -204,8 +191,6 @@ export default function Home() {
           </Card>
         ))}
       </div>
-
-      {/* Platform Status / Actions */}
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2 border-slate-100 shadow-sm">
           <CardHeader>
@@ -222,7 +207,6 @@ export default function Home() {
             </p>
           </CardContent>
         </Card>
-
         <Card className="flex flex-col justify-between border-slate-100 shadow-sm">
           <CardHeader>
             <CardTitle className="text-sm font-bold text-slate-900 uppercase tracking-widest">
@@ -259,7 +243,6 @@ export default function Home() {
               </span>
             </div>
           </CardContent>
-
           <CardFooter className="mt-6 border-t border-slate-50 pt-4 text-[9px] text-slate-500 flex items-center justify-between uppercase bg-slate-50/20">
             <span>Время ответа:</span>
             {apiStatus.loading ? (

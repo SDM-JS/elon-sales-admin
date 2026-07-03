@@ -137,3 +137,13 @@ export const deleteCarusel = async (id: string) => {
   const response = await api.delete(`/carusel/${id}`)
   return response.data
 }
+
+export const getStats = async () => {
+  const response = await api.get("/carusel/stat")
+  return response.data
+}
+
+export const sendMessages = async (id: string) => {
+  const response = await api.post<{ success: boolean, totalSent: number, totalFailed: number, totalUsers: number }>(`/notification/send-notification/${id}`)
+  return response
+}
