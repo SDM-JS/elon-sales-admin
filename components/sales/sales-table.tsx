@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Edit2, Trash2, PlusCircle, Loader2, Eye, X } from "lucide-react";
+import { Edit2, Trash2, PlusCircle, Loader2, Eye, X, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner"; // Заменено на современный toast вместо alert
@@ -11,7 +11,8 @@ import {
   getCarusels,
   deleteCarusel,
   updateCarusel,
-} from "@/lib/api"; 
+  sendMessages,
+} from "@/lib/api";
 import {
   Table,
   TableBody,
@@ -43,6 +44,7 @@ export function SalesTable({
 }: SalesTableProps) {
   const [selectedSaleIds, setSelectedSaleIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [result, setResult] = useState<any>(null)
 
   // Состояния карусели
   const [carousels, setCarousels] = useState<CarouselItem[]>([]);
@@ -77,6 +79,15 @@ export function SalesTable({
     );
   };
 
+  const sendMessage = async (id: string) => {
+    try {
+      const result = sendMessages(id)
+      setResult(result)
+    } catch (error) {
+      console.error("Send message error: ", error)
+    }
+  }
+
   // Выбор всех элементов
   const handleSelectAll = () => {
     if (selectedSaleIds.length === sales.length) {
@@ -107,7 +118,7 @@ export function SalesTable({
       console.error("Ошибка при добавлении в карусель:", error);
       toast.error(
         error?.response?.data?.message ||
-          "Произошла ошибка при добавлении в карусель",
+        "Произошла ошибка при добавлении в карусель",
       );
     } finally {
       setIsSubmitting(false);
@@ -233,11 +244,10 @@ export function SalesTable({
             {sales.map((sale) => (
               <TableRow
                 key={sale.id}
-                className={`border-b border-slate-100 hover:bg-slate-50/40 transition-colors ${
-                  selectedSaleIds.includes(sale.id)
-                    ? "bg-indigo-50/20 hover:bg-indigo-50/30"
-                    : ""
-                }`}
+                className={`border-b border-slate-100 hover:bg-slate-50/40 transition-colors ${selectedSaleIds.includes(sale.id)
+                  ? "bg-indigo-50/20 hover:bg-indigo-50/30"
+                  : ""
+                  }`}
               >
                 <TableCell className="px-4 py-4 text-center">
                   <Checkbox
@@ -314,6 +324,16 @@ export function SalesTable({
                     >
                       <Trash2 className="h-3 w-3 mr-1 text-rose-400" />
                       Удалить
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => sendMessage(sale.id)}
+                      disabled={isSubmitting}
+                      className="h-8 rounded-xl text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-all cursor-pointer text-[10px] uppercase font-bold tracking-wider"
+                    >
+                      <Send className="h-3 w-3 mr-1 text-rose-400" />
+                      Отправить
                     </Button>
                   </div>
                 </TableCell>
